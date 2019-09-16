@@ -14,7 +14,7 @@ module.exports = {
         console.log(data);
     },
     registerScheme: function () {
-        protocol.registerStandardSchemes(['cap']);
+        protocol.registerSchemesAsPrivileged([{ scheme: 'cap' }]);
     },
     registerProtocol: function () {
         protocol.registerBufferProtocol('cap', (request, callback) => {

@@ -101,7 +101,10 @@ function createWindow () {
 		icon: __dirname + "/icon.png",
 		minWidth: 415,
 		minHeight: 32,
-		backgroundColor: "#23232c"
+		backgroundColor: "#23232c",
+		webPreferences: {
+      nodeIntegration: true
+    }
 	});
 
 	mainWindow.setMenu(null);

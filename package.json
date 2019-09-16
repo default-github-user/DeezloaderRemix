@@ -9,8 +9,10 @@
 	},
 	"devDependencies": {
 		"cross-env": "latest",
-		"electron": "^3.1.9",
-		"electron-builder": "^20.40.2"
+		"electron": "latest",
+		"electron-builder": "latest",
+		"electron-context-menu": "latest",
+		"electron-window-state-manager": "latest"
 	},
 	"scripts": {
 		"dist:win32": "electron-builder -w --ia32 --config.nsis.artifactName=\"${productName} ${version} Setup x32.${ext}\" --config.portable.artifactName=\"${productName} ${version} x32.${ext}\"",
