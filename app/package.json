@@ -22,6 +22,8 @@
 		"request-promise": "latest",
 		"sequential-task-queue": "latest",
 		"socket.io": "latest",
-		"spotify-web-api-node": "latest"
+		"spotify-web-api-node": "latest",
+		"electron-context-menu": "latest",
+		"electron-window-state-manager": "latest"
 	}
 }
