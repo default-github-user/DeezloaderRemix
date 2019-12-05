@@ -2211,9 +2211,9 @@ io.sockets.on('connection', function (s) {
 							// Thanks to Generalo for the improved download function
 							if (track.selectedFormat == 9){
 								if (i % 3 > 0 || chunk.length < 2048) {
-									if (i < 1000){
+									if (i < 5000){
 										flacBuffer += chunk.toString('binary');
-									}else if (i == 1000){
+									}else if (i == 5000){
 										let buf = Buffer.from(flacBuffer, 'binary');
 										if (track.id > 0) fileStream.write(getMetadata(buf, track, settings));
 										fileStream.write(chunk);
@@ -2222,7 +2222,7 @@ io.sockets.on('connection', function (s) {
 									}
 								} else {
 									let chunkDec = decryptChunk(chunk, blowFishKey);
-									if (i < 1000){
+									if (i < 5000){
 										flacBuffer += chunkDec.toString('binary');
 									}else{
 										fileStream.write(chunkDec, 'binary');
@@ -2248,7 +2248,7 @@ io.sockets.on('connection', function (s) {
 							if (track.selectedFormat != 9 && settings.saveID3v1 && track.id > 0 && track.selectedFormat <= 9){
 								fileStream.write(getID3v1(track, settings))
 							}
-							if (track.selectedFormat == 9 && i < 1000){
+							if (track.selectedFormat == 9 && i < 5000){
 								let buf = Buffer.from(flacBuffer, 'binary');
 								fileStream.write(getMetadata(buf, track, settings));
 							}
