@@ -1623,6 +1623,7 @@ io.sockets.on('connection', function (s) {
 				}
 				if (settings.savePlaylistAsCompilation && settings.plName){
 					track.album = settings.playlist
+					track.album.trackTotal = track.album.fullSize
 					track.trackNumber = track.position+1
 					if (track.album.dateObj) {
 						track.date = track.album.dateObj
@@ -2573,7 +2574,7 @@ function settingsRegex(track, filename, playlist) {
 		filename = filename.replace(/[/\\]/g, path.sep)
 		return filename.trim();
 	}catch(e){
-		logger.error("settingsRegex failed: "+e)
+		logger.error("settingsRegex failed: "+e.stack)
 	}
 }
 
