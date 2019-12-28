@@ -2645,6 +2645,7 @@ function settingsRegexArtist(artist, foldername) {
 
 function settingsRegexPlaylist(playlist, foldername){
 	foldername = foldername.replace(/%owner%/g, fixName(playlist.artist.name));
+    foldername = foldername.replace(/%artist_id%/g, fixName(playlist.artist.id));
 	foldername = foldername.replace(/%name%/g, fixName(playlist.title));
 	foldername = foldername.replace(/%year%/g, fixName(playlist.year));
 	foldername = foldername.replace(/%date%/g, fixName(playlist.date));
