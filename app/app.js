@@ -2588,6 +2588,7 @@ function settingsRegexAlbum(album, foldername) {
 	try{
 		foldername = foldername.replace(/%album%/g, fixName(album.title))
 		foldername = foldername.replace(/%artist%/g, fixName(album.artist.name))
+        foldername = foldername.replace(/%artist_id%/g, fixName(album.artist.id));
 		foldername = foldername.replace(/%year%/g, fixName(album.year))
 		foldername = foldername.replace(/%date%/g, fixName(album.date))
 		if (album.recordType){
