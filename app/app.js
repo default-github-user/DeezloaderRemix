@@ -2906,8 +2906,12 @@ function getID3(track, settings){
 		writer.setFrame('TPE1', [changeCase(track.artistsString, settings.artistCasing)])
 	if (settings.tags.album)
 		writer.setFrame('TALB', track.album.title)
-	if (settings.tags.albumArtist && track.album.artist)
-		writer.setFrame('TPE2', changeCase(track.album.artist.name, settings.artistCasing))
+	if (settings.tags.albumArtist && track.album.artist){
+		if (settings.savePlaylistAsCompilation)
+			writer.setFrame('TPE2', changeCase("Various Artists", settings.artistCasing))
+		else
+			writer.setFrame('TPE2', changeCase(track.album.artist.name, settings.artistCasing))
+	}
 	if (settings.tags.trackNumber)
 		writer.setFrame('TRCK', (settings.tags.trackTotal ? track.trackNumber+"/"+track.album.trackTotal : track.trackNumber))
 	if (settings.tags.discNumber)
@@ -2958,6 +2962,8 @@ function getID3(track, settings){
 			description: 'ITUNESADVISORY',
 			value: track.explicit ? "1" : "0"
 		});
+	if (settings.savePlaylistAsCompilation)
+		writer.setFrame('TCMP', 1)
 	writer.addTag();
 	return Buffer.from(writer.arrayBuffer);
 }
