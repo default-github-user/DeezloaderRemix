@@ -377,7 +377,8 @@ io.sockets.on('connection', function (s) {
 	s.on("getMyPlaylistList", function (d) {getMyPlaylistList(d.spotifyUser)})
 
 	// Returns search results from a query
-	async function search(type, text){
+	async function search(type, text, index){
+		index = index || 0
 		type = type || "track"
 		if (["track", "playlist", "album", "artist"].indexOf(type) == -1) type = "track"
 
@@ -392,15 +393,15 @@ io.sockets.on('connection', function (s) {
 			.replace(/—/g, "-")
 
 		try {
-			let searchObject = await s.Deezer.legacySearch(encodeURIComponent(text), type)
-			return {type: type, items: searchObject.data}
+			let searchObject = await s.Deezer.legacySearch(encodeURIComponent(text), type, 25, index)
+			return {type: type, items: searchObject.data, update: index>=1}
 		} catch (err) {
 			logger.error(`search failed: ${err.stack}`)
-			return {type: type, items: []}
+			return {type: type, items: [], update: index>=1}
 		}
 	}
 	s.on("search", async function (data) {
-		s.emit("search", await search(data.type, data.text))
+		s.emit("search", await search(data.type, data.text, data.index))
 	})
 
 	// Returns list of tracks from an album/playlist or the list of albums from an artist

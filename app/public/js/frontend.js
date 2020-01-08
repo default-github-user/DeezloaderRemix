@@ -10,6 +10,9 @@ var modalQuality = document.getElementById('modal_quality');
 modalQuality.open = false
 let userSettings = {}
 let spotifySettings = {}
+var currentSearch = ""
+var currentIndex = 0
+var searchCapped = false
 
 var downloadQueue = []
 var loggedIn = false
@@ -253,6 +256,22 @@ $(document).ready(function () {
 	$("main.container").addClass('animated fadeIn').on('webkitAnimationEnd', function () {
 		$(this).removeClass('animated fadeOut')
 	})
+
+	// Continuous search
+	$(window).scroll(function () {
+    if ($(document).height() <= $(window).scrollTop() + $(window).height()) {
+      if (tabs.index == 0 && !searchCapped){
+				currentIndex +=1;
+				searchString = currentSearch
+				var mode = $('#tab_search_form_search').find('input[name=searchMode]:checked').val()
+
+				if (searchString.length == 0) {return}
+				$('#tab_search_table_results_tbody_loadingIndicator').removeClass('hide')
+				console.log(currentIndex)
+				socket.emit("search", {type: mode, text: searchString, index: currentIndex*25})
+			}
+    }
+  });
 
 	// Load top charts list for countries
 	if (localStorage.getItem('chartsCountry') == null)
@@ -708,9 +727,12 @@ function message(title, message) {
 // Submit Search Form
 $('#tab_search_form_search').submit(function (ev) {
 	ev.preventDefault()
+	currentIndex = 0
+	searchCapped = false
 	var searchString = $('#tab_search_form_search_input_searchString').val().trim()
 	if (searchString.indexOf('deezer.com/') < 0 && searchString.indexOf('open.spotify.com/') < 0 && searchString.indexOf('spotify:') < 0) {
 		var mode = $('#tab_search_form_search').find('input[name=searchMode]:checked').val()
+		currentSearch = searchString
 
 		if (searchString.length == 0) {return}
 
@@ -720,8 +742,9 @@ $('#tab_search_form_search').submit(function (ev) {
 		$('#tab_search_table_results_tbody_noResults').addClass('hide')
 		$('#tab_search_table_results_tbody_loadingIndicator').removeClass('hide')
 
-		socket.emit("search", {type: mode, text: searchString})
+		socket.emit("search", {type: mode, text: searchString, index: 0})
 	}else{
+		currentSearch = ""
 		parseDownloadFromURL($('#tab_search_form_search_input_searchString').val().trim())
 	}
 })
@@ -763,26 +786,27 @@ socket.on('search', function (data) {
 
 	// If no data, display No Results Found
 	if (data.items.length == 0) {
-		$('#tab_search_table_results_tbody_noResults').removeClass('hide')
+		if (!data.update) $('#tab_search_table_results_tbody_noResults').removeClass('hide')
+		searchCapped = true
 		return
 	}
 
 	// Populate table and show results
 	if (data.type == 'track') {
-		showResults_table_track(data.items)
+		showResults_table_track(data.items, data.update)
 	} else if (data.type == 'album') {
-		showResults_table_album(data.items)
+		showResults_table_album(data.items, data.update)
 	} else if (data.type == 'artist') {
-		showResults_table_artist(data.items)
+		showResults_table_artist(data.items, data.update)
 	} else if (data.type == 'playlist') {
-		showResults_table_playlist(data.items)
+		showResults_table_playlist(data.items, data.update)
 	}
 	$('#tab_search_table_results_tbody_results').removeClass('hide')
 })
 
-function showResults_table_track(tracks) {
+function showResults_table_track(tracks, update) {
 	var tableBody = $('#tab_search_table_results_tbody_results')
-	$(tableBody).html('')
+	if (!update) $(tableBody).html('')
 	$('#tab_search_table_results_thead_track').removeClass('hide')
 	for (var i = 0; i < tracks.length; i++) {
 		var currentResultTrack = tracks[i]
@@ -813,9 +837,9 @@ function showResults_table_track(tracks) {
 	}
 }
 
-function showResults_table_album(albums) {
+function showResults_table_album(albums, update) {
 	var tableBody = $('#tab_search_table_results_tbody_results')
-	$(tableBody).html('')
+	if (!update) $(tableBody).html('')
 	$('#tab_search_table_results_thead_album').removeClass('hide')
 	for (var i = 0; i < albums.length; i++) {
 		var currentResultAlbum = albums[i]
@@ -842,9 +866,9 @@ function showResults_table_album(albums) {
 	$('.tooltipped').tooltip({delay: 100})
 }
 
-function showResults_table_artist(artists) {
+function showResults_table_artist(artists, update) {
 	var tableBody = $('#tab_search_table_results_tbody_results')
-	$(tableBody).html('')
+	if (!update) $(tableBody).html('')
 	$('#tab_search_table_results_thead_artist').removeClass('hide')
 	for (var i = 0; i < artists.length; i++) {
 		var currentResultArtist = artists[i]
@@ -859,9 +883,9 @@ function showResults_table_artist(artists) {
 	}
 }
 
-function showResults_table_playlist(playlists) {
+function showResults_table_playlist(playlists, update) {
 	var tableBody = $('#tab_search_table_results_tbody_results')
-	$(tableBody).html('')
+	if (!update) $(tableBody).html('')
 	$('#tab_search_table_results_thead_playlist').removeClass('hide')
 	for (var i = 0; i < playlists.length; i++) {
 		var currentResultPlaylist = playlists[i]
