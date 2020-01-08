@@ -1026,6 +1026,8 @@ io.sockets.on('connection', function (s) {
 			}
 			localDownloadQueue.splice(localDownloadQueue.indexOf(downloadQueue[queueId].id), 1);
 			delete downloadQueue[queueId]
+		} else {
+			io.sockets.emit("cancelDownload", {err: "queueID not found in downloadQueue"})
 		}
 
 		if (cancel) {
@@ -2464,6 +2466,42 @@ app.get('/api/queue/', function (req, res) {
 		queueItems.push(downloadQueue[item])
 	}
 	res.status(200).send({"length": itemsInQueue, "items": queueItems});
+});
+
+app.all('/api/canceldownload/', function (req, res) {
+	//accepts a queueId, removes it from queue		format: {"queueId": "idxn99qi6r6wq"}
+	// or &queueId=idxn99qi6r6wq
+	if (req.method != 'POST' && req.method != 'GET') {
+		res.status(400).send({"Error": `${req.url} only accepts GET and POST`});
+	} else {
+		let receivedData
+		if (req.method == 'POST') {
+			receivedData = req.body
+		} else if (req.method == 'GET') {
+			receivedData = req.query
+		}
+		if (Object.keys(receivedData).length == 0) {
+			res.status(400).send({"Error": `Empty ${req.method} received`});
+		} else {
+			let queueId = receivedData['queueId']
+			clientsocket.emit("cancelDownload", {queueId: queueId});
+
+			clientsocket.on("cancelDownload", function (data) {
+				if (data.err){
+					if (!(res.headersSent)) {	//no clue why I need this check but without, 2nd+ request breaks
+						res.writeHead(400, { 'Content-Type': 'application/json' });
+					}
+					res.end(JSON.stringify({"Error": data.err}));
+				} else {
+					if (!(res.headersSent)) {	//no clue why I need this check but without, 2nd+ request breaks
+						res.writeHead(200, { 'Content-Type': 'application/json' });
+					}
+					response = `Removed ${data.queueId} from queue`
+					res.end(JSON.stringify({'Message': response, 'queueID': data.queueId}));
+				}
+			})
+		}
+	}
 });
 
 // Helper functions

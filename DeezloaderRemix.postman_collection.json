@@ -1002,6 +1002,83 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Cancel Download",
+			"item": [
+				{
+					"name": "Cancel Download",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"queueId\": \"ida33m5l8firh\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1730/api/canceldownload/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1730",
+							"path": [
+								"api",
+								"canceldownload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Download",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:1730/api/canceldownload/?queueId=ida33m5l8firh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1730",
+							"path": [
+								"api",
+								"canceldownload",
+								""
+							],
+							"query": [
+								{
+									"key": "queueId",
+									"value": "ida33m5l8firh"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}
