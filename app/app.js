@@ -414,7 +414,12 @@ io.sockets.on('connection', function (s) {
 			try{
 				let response = await s.Deezer.legacyGetArtist(data.id)
 				let tracks = await s.Deezer.legacyGetArtistAlbums(data.id)
-				response.data = tracks.data
+				tracksData = {}
+				tracks.data.forEach(release=>{
+					if (!tracksData[release.record_type]) tracksData[release.record_type] = []
+					tracksData[release.record_type].push(release)
+				})
+				response.data = tracksData
 				s.emit("getTrackList", {response: response, id: data.id, reqType: data.type})
 			}catch(err){
 				s.emit("getTrackList", {err: "wrong artist id", response: {}, id: data.id, reqType: data.type})

@@ -22,6 +22,9 @@ let preview_track = document.getElementById('preview-track')
 let preview_stopped = true
 const COUNTRIES = {"AF": "Afghanistan","AX": "\u00c5land Islands","AL": "Albania","DZ": "Algeria","AS": "American Samoa","AD": "Andorra","AO": "Angola","AI": "Anguilla","AQ": "Antarctica","AG": "Antigua and Barbuda","AR": "Argentina","AM": "Armenia","AW": "Aruba","AU": "Australia","AT": "Austria","AZ": "Azerbaijan","BS": "Bahamas","BH": "Bahrain","BD": "Bangladesh","BB": "Barbados","BY": "Belarus","BE": "Belgium","BZ": "Belize","BJ": "Benin","BM": "Bermuda","BT": "Bhutan","BO": "Bolivia, Plurinational State of","BQ": "Bonaire, Sint Eustatius and Saba","BA": "Bosnia and Herzegovina","BW": "Botswana","BV": "Bouvet Island","BR": "Brazil","IO": "British Indian Ocean Territory","BN": "Brunei Darussalam","BG": "Bulgaria","BF": "Burkina Faso","BI": "Burundi","KH": "Cambodia","CM": "Cameroon","CA": "Canada","CV": "Cape Verde","KY": "Cayman Islands","CF": "Central African Republic","TD": "Chad","CL": "Chile","CN": "China","CX": "Christmas Island","CC": "Cocos (Keeling) Islands","CO": "Colombia","KM": "Comoros","CG": "Congo","CD": "Congo, the Democratic Republic of the","CK": "Cook Islands","CR": "Costa Rica","CI": "C\u00f4te d'Ivoire","HR": "Croatia","CU": "Cuba","CW": "Cura\u00e7ao","CY": "Cyprus","CZ": "Czech Republic","DK": "Denmark","DJ": "Djibouti","DM": "Dominica","DO": "Dominican Republic","EC": "Ecuador","EG": "Egypt","SV": "El Salvador","GQ": "Equatorial Guinea","ER": "Eritrea","EE": "Estonia","ET": "Ethiopia","FK": "Falkland Islands (Malvinas)","FO": "Faroe Islands","FJ": "Fiji","FI": "Finland","FR": "France","GF": "French Guiana","PF": "French Polynesia","TF": "French Southern Territories","GA": "Gabon","GM": "Gambia","GE": "Georgia","DE": "Germany","GH": "Ghana","GI": "Gibraltar","GR": "Greece","GL": "Greenland","GD": "Grenada","GP": "Guadeloupe","GU": "Guam","GT": "Guatemala","GG": "Guernsey","GN": "Guinea","GW": "Guinea-Bissau","GY": "Guyana","HT": "Haiti","HM": "Heard Island and McDonald Islands","VA": "Holy See (Vatican City State)","HN": "Honduras","HK": "Hong Kong","HU": "Hungary","IS": "Iceland","IN": "India","ID": "Indonesia","IR": "Iran, Islamic Republic of","IQ": "Iraq","IE": "Ireland","IM": "Isle of Man","IL": "Israel","IT": "Italy","JM": "Jamaica","JP": "Japan","JE": "Jersey","JO": "Jordan","KZ": "Kazakhstan","KE": "Kenya","KI": "Kiribati","KP": "Korea, Democratic People's Republic of","KR": "Korea, Republic of","KW": "Kuwait","KG": "Kyrgyzstan","LA": "Lao People's Democratic Republic","LV": "Latvia","LB": "Lebanon","LS": "Lesotho","LR": "Liberia","LY": "Libya","LI": "Liechtenstein","LT": "Lithuania","LU": "Luxembourg","MO": "Macao","MK": "Macedonia, the Former Yugoslav Republic of","MG": "Madagascar","MW": "Malawi","MY": "Malaysia","MV": "Maldives","ML": "Mali","MT": "Malta","MH": "Marshall Islands","MQ": "Martinique","MR": "Mauritania","MU": "Mauritius","YT": "Mayotte","MX": "Mexico","FM": "Micronesia, Federated States of","MD": "Moldova, Republic of","MC": "Monaco","MN": "Mongolia","ME": "Montenegro","MS": "Montserrat","MA": "Morocco","MZ": "Mozambique","MM": "Myanmar","NA": "Namibia","NR": "Nauru","NP": "Nepal","NL": "Netherlands","NC": "New Caledonia","NZ": "New Zealand","NI": "Nicaragua","NE": "Niger","NG": "Nigeria","NU": "Niue","NF": "Norfolk Island","MP": "Northern Mariana Islands","NO": "Norway","OM": "Oman","PK": "Pakistan","PW": "Palau","PS": "Palestine, State of","PA": "Panama","PG": "Papua New Guinea","PY": "Paraguay","PE": "Peru","PH": "Philippines","PN": "Pitcairn","PL": "Poland","PT": "Portugal","PR": "Puerto Rico","QA": "Qatar","RE": "R\u00e9union","RO": "Romania","RU": "Russian Federation","RW": "Rwanda","BL": "Saint Barth\u00e9lemy","SH": "Saint Helena, Ascension and Tristan da Cunha","KN": "Saint Kitts and Nevis","LC": "Saint Lucia","MF": "Saint Martin (French part)","PM": "Saint Pierre and Miquelon","VC": "Saint Vincent and the Grenadines","WS": "Samoa","SM": "San Marino","ST": "Sao Tome and Principe","SA": "Saudi Arabia","SN": "Senegal","RS": "Serbia","SC": "Seychelles","SL": "Sierra Leone","SG": "Singapore","SX": "Sint Maarten (Dutch part)","SK": "Slovakia","SI": "Slovenia","SB": "Solomon Islands","SO": "Somalia","ZA": "South Africa","GS": "South Georgia and the South Sandwich Islands","SS": "South Sudan","ES": "Spain","LK": "Sri Lanka","SD": "Sudan","SR": "Suriname","SJ": "Svalbard and Jan Mayen","SZ": "Swaziland","SE": "Sweden","CH": "Switzerland","SY": "Syrian Arab Republic","TW": "Taiwan, Province of China","TJ": "Tajikistan","TZ": "Tanzania, United Republic of","TH": "Thailand","TL": "Timor-Leste","TG": "Togo","TK": "Tokelau","TO": "Tonga","TT": "Trinidad and Tobago","TN": "Tunisia","TR": "Turkey","TM": "Turkmenistan","TC": "Turks and Caicos Islands","TV": "Tuvalu","UG": "Uganda","UA": "Ukraine","AE": "United Arab Emirates","GB": "United Kingdom","US": "United States","UM": "United States Minor Outlying Islands","UY": "Uruguay","UZ": "Uzbekistan","VU": "Vanuatu","VE": "Venezuela, Bolivarian Republic of","VN": "Viet Nam","VG": "Virgin Islands, British","VI": "Virgin Islands, U.S.","WF": "Wallis and Futuna","EH": "Western Sahara","YE": "Yemen","ZM": "Zambia","ZW": "Zimbabwe"}
 
+// to assist with any data manipulation [global usage]
+window._ = require('lodash');
+
 // Load language files
 var currentLang = getCookie("lang")
 if (currentLang === undefined){
@@ -257,7 +260,7 @@ $(document).ready(function () {
 		$(this).removeClass('animated fadeOut')
 	})
 
-	// Continuous search
+	// Continuous scrolling search
 	$(window).scroll(function () {
     if ($(document).height() <= $(window).scrollTop() + $(window).height()) {
       if (tabs.index == 0 && !searchCapped){
@@ -341,7 +344,7 @@ $(document).ready(function () {
 		}
 	})
 
-	$('#modal_trackList, #modal_trackListSelective').modal({
+	$('#modal_artist, #modal_trackListSelective').modal({
 		onCloseStart: ()=>{
 			if ($('.preview_playlist_controls').filter(function(){return $(this).attr("playing")}).length > 0){
 				$(preview_track).animate({volume: 0}, 800)
@@ -828,7 +831,7 @@ function showResults_table_track(tracks, update) {
 		addPreviewControlsClick(tableBody.children('tr:last').find('.single-cover'))
 		tableBody.children('tr:last').find('.resultArtist').click(function (ev){
 			ev.preventDefault()
-			showTrackList($(this).data("link"))
+			showArtistModal($(this).data("link"))
 		})
 		tableBody.children('tr:last').find('.resultAlbum').click(function (ev){
 			ev.preventDefault()
@@ -860,7 +863,7 @@ function showResults_table_album(albums, update) {
 		generateDownloadLink(currentResultAlbum.link).appendTo(tableBody.children('tr:last')).wrap('<td>')
 		tableBody.children('tr:last').find('.resultArtist').click(function (ev){
 			ev.preventDefault()
-			showTrackList($(this).data("link"))
+			showArtistModal($(this).data("link"))
 		})
 	}
 	$('.tooltipped').tooltip({delay: 100})
@@ -878,7 +881,7 @@ function showResults_table_artist(artists, update) {
 				<td class="breakline">${currentResultArtist.name}</td>
 				<td>${currentResultArtist.nb_album}</td>
 				</tr>`)
-		generateShowTracklistButton(currentResultArtist.link).appendTo(tableBody.children('tr:last')).wrap('<td>')
+		generateShowArtistButton(currentResultArtist.link).appendTo(tableBody.children('tr:last')).wrap('<td>')
 		generateDownloadLink(currentResultArtist.link).appendTo(tableBody.children('tr:last')).wrap('<td>')
 	}
 }
@@ -918,18 +921,58 @@ var trackListSelectiveModalApp = new Vue({
 	}
 })
 
-var trackListModalApp = new Vue({
-	el: '#modal_trackList',
+var artistModalApp = new Vue({
+	el: '#modal_artist',
 	data: {
+		currentTab: '',
+		sortKey: 'release_date',
+		sortOrder: 'desc',
 		title: "",
-		metadata : {},
-		release_date: "",
-		label: "",
 		image: "",
 		type: "",
 		link: "",
 		head: null,
-		body: []
+		body: null
+	},
+	methods: {
+		downloadClick : function(url, e){
+	    if (e) e.preventDefault();
+	    addToQueue(url)
+		},
+		downloadRClick: function(url, e){
+	    if (e) e.preventDefault();
+			$(modalQuality).data("url", url)
+			$(modalQuality).css('display', 'block')
+			$(modalQuality).addClass('animated fadeIn')
+	    return false;
+		},
+		moreInfo: function(url, e){
+			if (e) e.preventDefault();
+			showTrackListSelective(url, true)
+		},
+		sortBy: function(key) {
+      if (key == this.sortKey) {
+				this.sortOrder = (this.sortOrder == 'asc') ? 'desc' : 'asc';
+      } else {
+				this.sortKey = key;
+				this.sortOrder = 'asc';
+      }
+		},
+		changeTab: function(tab){
+			this.currentTab = tab
+		}
+	},
+	updated: function(){
+		this.$nextTick(function () {
+			if (this.body != {}){
+				M.Tabs.init(document.getElementById("artist-tabs"));
+			}
+	  })
+	},
+	computed: {
+		showTable() {
+			return _.orderBy(this.body[this.currentTab], this.sortKey, this.sortOrder)
+		}
 	}
 })
 
@@ -989,27 +1032,29 @@ $('#download_track_selection').on('contextmenu', function(e){
 })
 
 // Generate Button for tracklist without selection
-function generateShowTracklistButton(link) {
+function generateShowArtistButton(link) {
 	var btn_showTrackList = $('<button class="waves-effect btn-flat"><i class="material-icons">list</i></button>')
 	$(btn_showTrackList).click(function (ev) {
 		ev.preventDefault()
-		showTrackList(link)
+		showArtistModal(link)
 	})
 	return btn_showTrackList
 }
 
-function showTrackList(link) {
-	$('#modal_trackList_table_trackList_tbody_trackList').addClass('hide')
-	$('#modal_trackList_table_trackList_tbody_loadingIndicator').removeClass('hide')
-	trackListModalApp.title = i18n("Loading...")
-	trackListModalApp.image = ""
-	trackListModalApp.metadata = ""
-	trackListModalApp.release_date = ""
-	trackListModalApp.type = ""
-	trackListModalApp.head = []
-	trackListModalApp.body = []
-	$('#modal_trackList').modal('open')
-	let type = getTypeFromLink(link)
+function showArtistModal(link) {
+	$('#modal_artist_table_trackList_tbody_trackList').addClass('hide')
+	$('#modal_artist_table_trackList_tbody_loadingIndicator').removeClass('hide')
+	artistModalApp.title = i18n("Loading...")
+	artistModalApp.image = ""
+	artistModalApp.type = ""
+	artistModalApp.currentTab = ''
+	artistModalApp.sortKey = 'release_date'
+	artistModalApp.sortOrder = 'desc'
+	artistModalApp.link = link
+	artistModalApp.head = []
+	artistModalApp.body = null
+	$('#modal_artist').modal('open')
+	let type = "artist"
 	let id = getIDFromLink(link, type)
 	socket.emit('getTrackList', {id: id, type: type})
 }
@@ -1032,25 +1077,29 @@ socket.on("getTrackList", function (data) {
 		}
 
 		// ########################################
-		if(data.reqType == 'album' || data.reqType == 'playlist' || data.reqType == 'spotifyplaylist'){
-			var tableBody = $('#modal_trackListSelective_table_trackListSelective_tbody_trackListSelective')
+		if(data.reqType == 'artist'){
+			var tableBody = $('#modal_artist_table_trackList_tbody_trackList')
 		} else {
-			var tableBody = $('#modal_trackList_table_trackList_tbody_trackList')
+			var tableBody = $('#modal_trackListSelective_table_trackListSelective_tbody_trackListSelective')
 		}
 		$(tableBody).html('')
 		//############################################
 		if (data.reqType == 'artist') {
-			trackListModalApp.title = data.response.name
-			trackListModalApp.image = data.response.picture_xl
-			trackListModalApp.type = i18n(data.reqType[0].toUpperCase() + data.reqType.substring(1))
-			trackListModalApp.link = `https://www.deezer.com/${data.reqType}/${data.id}`
-			trackListModalApp.head = [
+			artistModalApp.title = data.response.name
+			artistModalApp.image = data.response.picture_xl
+			artistModalApp.type = "Artist"
+			artistModalApp.link = `https://www.deezer.com/${data.reqType}/${data.id}`
+			artistModalApp.currentTab = Object.keys(trackList)[0]
+			artistModalApp.sortKey = 'release_date'
+			artistModalApp.sortOrder = 'desc'
+			artistModalApp.head = [
 				{title: '', smallonly:true},
-				{title: i18n('Album Title'), hideonsmall:true},
-				{title: i18n('Release Date'), hideonsmall:true},
-				{title: i18n('Record Type'), hideonsmall:true},
+				{title: i18n('Title'), hideonsmall:true, sortKey: "title"},
+				{title: i18n('Release Date'), hideonsmall:true, sortKey: "release_date"},
 				{title: '', width: "56px"}
 			]
+			artistModalApp.body = trackList
+			/*
 			for (var i = 0; i < trackList.length; i++) {
 				$(tableBody).append(
 					`<tr>
@@ -1068,7 +1117,7 @@ socket.on("getTrackList", function (data) {
 			$('.album_chip').click(function(e){
 				e.preventDefault();
 				showTrackListSelective($(this).data('link'), true)
-			})
+			})*/
 		} else if(data.reqType == 'playlist') {
 			trackListSelectiveModalApp.type = i18n(data.reqType[0].toUpperCase() + data.reqType.substring(1))
 			trackListSelectiveModalApp.link = `https://www.deezer.com/${data.reqType}/${data.id}`
@@ -1113,7 +1162,7 @@ socket.on("getTrackList", function (data) {
 				addPreviewControlsClick(tableBody.children('tr:last').find('.preview_playlist_controls'))
 				tableBody.children('tr:last').find('.resultArtist').click(function (ev){
 					ev.preventDefault()
-					showTrackList($(this).data("link"))
+					showArtistModal($(this).data("link"))
 				})
 				tableBody.children('tr:last').find('.resultAlbum').click(function (ev){
 					ev.preventDefault()
@@ -1219,9 +1268,9 @@ socket.on("getTrackList", function (data) {
 			var [hh,mm,ss] = convertDurationSeparated(totalDuration)
 			trackListSelectiveModalApp.metadata += `, ${hh>0 ? `${hh} hr` : ""} ${mm} min`
 		} else {
-			trackListModalApp.type = null
-			trackListModalApp.title = 'Tracklist'
-			trackListModalApp.head = [
+			trackListSelectiveModalApp.type = null
+			trackListSelectiveModalApp.title = 'Tracklist'
+			trackListSelectiveModalApp.head = [
 				{title: '<i class="material-icons">music_note</i>'},
 				{title: '#'},
 				{title: 'Song'},
@@ -1241,14 +1290,13 @@ socket.on("getTrackList", function (data) {
 				addPreviewControlsClick(tableBody.children('tr:last').find('.preview_playlist_controls'))
 			}
 		}
-		if(data.reqType == 'album' || data.reqType == 'playlist' || data.reqType == 'spotifyplaylist'){
+		if(data.reqType == 'artist'){
+			$('#modal_artist_table_trackList_tbody_loadingIndicator').addClass('hide')
+			$('#modal_artist_table_trackList_tbody_trackList').removeClass('hide')
+		} else {
 			$('#modal_trackListSelective_table_trackListSelective_tbody_loadingIndicator').addClass('hide')
 			$('#modal_trackListSelective_table_trackListSelective_tbody_trackListSelective').removeClass('hide')
-		} else {
-			$('#modal_trackList_table_trackList_tbody_loadingIndicator').addClass('hide')
-			$('#modal_trackList_table_trackList_tbody_trackList').removeClass('hide')
 		}
-		//$('#modal_trackList_table_trackList_tbody_trackList').html(content)
 	}
 })
 
@@ -1301,7 +1349,7 @@ socket.on("getChartsTrackListByCountry", function (data) {
 		addPreviewControlsClick(chartsTableBody.children('tr:last').find('.single-cover'))
 		chartsTableBody.children('tr:last').find('.resultArtist').click(function (ev){
 			ev.preventDefault()
-			showTrackList($(this).data("link"))
+			showArtistModal($(this).data("link"))
 		})
 		chartsTableBody.children('tr:last').find('.resultAlbum').click(function (ev){
 			ev.preventDefault()
@@ -1340,7 +1388,7 @@ var linkAnalyzerSong = new Vue({
 	},
 	methods:{
 		showArtist: function(){
-			showTrackList(this.d.artist.link)
+			showArtistModal(this.d.artist.link)
 		},
 		showAlbum: function(){
 			showTrackListSelective(`https://www.deezer.com/album/${this.d.album.id}`)
@@ -1355,7 +1403,7 @@ var linkAnalyzerAlbum = new Vue({
 	},
 	methods:{
 		showArtist: function(){
-			showTrackList(`https://www.deezer.com/artist/${this.d.artist.id}`)
+			showArtistModal(`https://www.deezer.com/artist/${this.d.artist.id}`)
 		}
 	}
 })

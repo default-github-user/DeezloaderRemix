@@ -811,22 +811,15 @@
 	</div>
 </div>
 
-<!--##########################################MODAL_TRACKLIST###########################################-->
-<div id="modal_trackList" class="modal modal-fixed-footer modal-custom-header">
+<!--##########################################MODAL_ARTIST###########################################-->
+<div id="modal_artist" class="modal modal-fixed-footer modal-custom-header">
 	<div class="modal-content">
 		<div class="trackList-header" v-bind:style="{ 'background-image': `linear-gradient(to bottom, transparent 0%, var(--main-modal-background) 100%), url('${image}')` }">
 			<h4>{{ title }}</h4>
-			<h6 v-if="metadata" style="display: inline;">{{ metadata }}</h6>
-			<span class="right hide-on-small-only" v-if="release_date"> {{ release_date }} </span>
 		</div>
 		<div class="modal-container">
-			<table class="highlight col s12">
-				<thead>
-				<tr>
-					<td v-for="data in head" v-html="data.title" v-bind:style = "{ 'width': `${data.width ? data.width : 'auto'}`}" v-bind:class="{ 'hide-on-med-and-up' : data.smallonly, 'hide-on-small-only': data.hideonsmall }"></td>
-				</tr>
-				</thead>
-				<tbody id="modal_trackList_table_trackList_tbody_loadingIndicator" class="hide">
+			<table>
+				<tbody id="modal_artist_table_trackList_tbody_loadingIndicator" class="hide">
 				<tr>
 					<td class="center" colspan="6">
 						<div class="preloader-wrapper big active">
@@ -845,9 +838,40 @@
 					</td>
 				</tr>
 				</tbody>
-				<tbody id="modal_trackList_table_trackList_tbody_trackList" class="hide">
-				</tbody>
 			</table>
+			<div v-if="body" class="row">
+				<div class="col s12">
+		      <ul id="artist-tabs" class="row tabs tabs-fixed-width">
+						<template v-for="(item, name, index) in body">
+							<li class="tab"><a v-bind:class="index==0 ? 'active' : ''" v-bind:href="'#artist_' + name" v-on:click="changeTab(name)">{{ name }}</a></li>
+						</template>
+		      </ul>
+				</div>
+				<div v-for="(item, name) in body" v-bind:id="'artist_' + name"></div>
+				<table class="highlight col s12">
+					<thead>
+					<tr>
+						<td v-for="data in head" v-on:click="data.sortKey ? sortBy(data.sortKey) : null" v-html="data.title" v-bind:style = "{ 'width': `${data.width ? data.width : 'auto'}`}" v-bind:class="{ 'hide-on-med-and-up' : data.smallonly, 'hide-on-small-only': data.hideonsmall }"></td>
+					</tr>
+					</thead>
+					<tbody>
+						<template v-for="release in showTable">
+							<tr>
+							<td class="hide-on-med-and-up">
+								<a href="#" v-on:click="moreInfo(release.link, $event)" class="album_chip" v-bind:data-link="release.link"><div class="chip"><img v-bind:src="release.cover_small"/><i v-if="release.explicit_lyrics" class="material-icons valignicon tiny materialize-red-text tooltipped" data-tooltip="Explicit">explicit</i> {{release.title}}</div></a>
+								<p class="remove-margin secondary-text">{{release.release_date}}</p>
+							</td>
+							<td class="hide-on-small-only breakline"><a href="#" v-on:click="moreInfo(release.link, $event)" class="album_chip" v-bind:data-link="release.link"><div class="chip"><img v-bind:src="release.cover_small"/><i v-if="release.explicit_lyrics" class="material-icons valignicon tiny materialize-red-text tooltipped" data-tooltip="Explicit">explicit</i> {{release.title}}</div></a></td>
+							<td class="hide-on-small-only">{{release.release_date}}</td>
+							<td><button class="waves-effect btn-flat" v-on:click="downloadClick(release.link, $event)" v-on:contextmenu="downloadRClick(release.link, $event)" v-bind:data-link="release.link"><i class="material-icons">file_download</i></button></td>
+							</tr>
+						</template>
+					</tbody>
+					<tbody id="modal_artist_table_trackList_tbody_trackList" class="hide">
+					</tbody>
+				</table>
+	    </div>
+
 		</div>
 	</div>
 	<div class="modal-footer">
@@ -856,7 +880,7 @@
 	</div>
 </div>
 
-<!--##########################################MODAL_TRACKLISTALBUM###########################################-->
+<!--##########################################MODAL_TRACKLIST###########################################-->
 <div id="modal_trackListSelective" class="modal modal-fixed-footer modal-custom-header">
 	<div class="modal-content">
 		<div class="trackList-header" v-bind:style="{ 'background-image': `linear-gradient(to bottom, transparent 0%, var(--main-modal-background) 100%), url('${image}')` }">
@@ -1286,6 +1310,7 @@
 <script type="text/javascript" src="js/socket.io.js"></script>
 <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
+<script type="text/javascript" src="js/lodash.min.js"></script>
 <script type="text/javascript" src="js/i18n.min.js"></script>
 <script type="text/javascript" src="js/vue.min.js"></script>
 <script type="text/javascript" src="js/appBase.js"></script>
