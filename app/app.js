@@ -1227,7 +1227,7 @@ io.sockets.on('connection', function (s) {
 					if (downloading.settings.createM3UFile){
 						let path = ""
 						if (downloading.settings.changePlaylistName)
-							path = downloading.filePath + antiDot(fixName(settingsRegexAlbum(downloading.settings.album, downloading.settings.albumNameTemplate)))+".m3u8"
+							path = downloading.filePath + antiDot(settingsRegexAlbum(downloading.settings.album, downloading.settings.albumNameTemplate))+".m3u8"
 						else
 							path = downloading.filePath+"playlist.m3u8"
 						fs.writeFileSync(path, downloading.playlistArr.join("\r\n"));
@@ -1347,14 +1347,14 @@ io.sockets.on('connection', function (s) {
 					if (downloading.settings.createM3UFile){
 						let path = ""
 						if (downloading.settings.changePlaylistName)
-							path = downloading.filePath + antiDot(fixName(settingsRegexPlaylist(downloading.settings.playlist, downloading.settings.playlistNameTemplate)))+".m3u8"
+							path = downloading.filePath + antiDot(settingsRegexPlaylist(downloading.settings.playlist, downloading.settings.playlistNameTemplate))+".m3u8"
 						else
 							path = downloading.filePath+"playlist.m3u8"
 						fs.writeFileSync(path, downloading.playlistArr.join("\r\n"));
 					}
 					if (downloading.settings.saveArtwork){
 						if (!fs.existsSync(downloading.filePath)) fs.mkdirpSync(downloading.filePath);
-						let imgPath = downloading.filePath + antiDot(fixName(settingsRegexAlbum(downloading.settings.playlist, downloading.settings.coverImageTemplate)))+(downloading.settings.PNGcovers ? ".png" : ".jpg");
+						let imgPath = downloading.filePath + antiDot(settingsRegexAlbum(downloading.settings.playlist, downloading.settings.coverImageTemplate))+(downloading.settings.PNGcovers ? ".png" : ".jpg");
 						if (downloading.obj.picture_small){
 							downloading.cover = downloading.obj.picture_small.replace("56x56",`${downloading.settings.localArtworkSize}x${downloading.settings.localArtworkSize}`)
 							request.get(downloading.cover, {strictSSL: false,encoding: 'binary'}, function(error,response,body){
@@ -1513,14 +1513,14 @@ io.sockets.on('connection', function (s) {
 					if (downloading.settings.createM3UFile){
 						let path = ""
 						if (downloading.settings.changePlaylistName)
-							path = downloading.filePath + antiDot(fixName(settingsRegexPlaylist(downloading.settings.playlist, downloading.settings.playlistNameTemplate)))+".m3u8"
+							path = downloading.filePath + antiDot(settingsRegexPlaylist(downloading.settings.playlist, downloading.settings.playlistNameTemplate))+".m3u8"
 						else
 							path = downloading.filePath+"playlist.m3u8"
 						fs.writeFileSync(path, downloading.playlistArr.join("\r\n"));
 					}
 					if (downloading.settings.saveArtwork){
 						if (!fs.existsSync(downloading.filePath)) fs.mkdirpSync(downloading.filePath);
-						let imgPath = downloading.filePath + antiDot(fixName(settingsRegexAlbum(downloading.settings.playlist, downloading.settings.coverImageTemplate)))+(downloading.settings.PNGcovers ? ".png" : ".jpg");
+						let imgPath = downloading.filePath + antiDot(settingsRegexAlbum(downloading.settings.playlist, downloading.settings.coverImageTemplate))+(downloading.settings.PNGcovers ? ".png" : ".jpg");
 						if (downloading.obj.images){
 							downloading.cover = downloading.obj.images[0].url
 							request.get(downloading.cover, {strictSSL: false,encoding: 'binary'}, function(error,response,body){
@@ -1977,7 +1977,7 @@ io.sockets.on('connection', function (s) {
 			filename = antiDot(fixName(`${track.artist.name} - ${track.title}`));
 		}
 		if (settings.filename) {
-			filename = antiDot(fixName(settingsRegex(track, settings.filename, settings.playlist)))
+			filename = antiDot(settingsRegex(track, settings.filename, settings.playlist))
 		}
 
 		filename = antiDot(fixName(filename))
@@ -1989,7 +1989,7 @@ io.sockets.on('connection', function (s) {
 		let coverPath;
 
 		if (settings.createPlaylistFolder && settings.plName && !settings.savePlaylistAsCompilation)
-			filepath += antiDot(fixName(settingsRegexPlaylist(settings.playlist, settings.playlistNameTemplate))) + path.sep;
+			filepath += antiDot(settingsRegexPlaylist(settings.playlist, settings.playlistNameTemplate)) + path.sep;
 
 		if (settings.plName && !settings.savePlaylistAsCompilation)
 			downloadQueue[queueId].filePath = filepath
@@ -1999,14 +1999,14 @@ io.sockets.on('connection', function (s) {
 			(settings.createArtistFolder && settings.plName && settings.savePlaylistAsCompilation) ||
 			(settings.createArtistFolder && settings.plName && settings.createStructurePlaylist)
 		){
-			filepath += antiDot(fixName(settingsRegexArtist(track.album.artist, settings.artistNameTemplate))) + path.sep;
+			filepath += antiDot(settingsRegexArtist(track.album.artist, settings.artistNameTemplate)) + path.sep;
 			artistPath = filepath;
 		}
 		if (settings.createAlbumFolder &&
 			(!settings.singleTrack || (settings.singleTrack && settings.createSingleFolder)) &&
 			(!settings.plName || (settings.plName && settings.savePlaylistAsCompilation) || (settings.plName && settings.createStructurePlaylist))
 		){
-			filepath += antiDot(fixName(settingsRegexAlbum(track.album, settings.albumNameTemplate))) + path.sep;
+			filepath += antiDot(settingsRegexAlbum(track.album, settings.albumNameTemplate)) + path.sep;
 			coverPath = filepath;
 		}
 		if (!(settings.plName && !settings.savePlaylistAsCompilation))
@@ -2092,7 +2092,7 @@ io.sockets.on('connection', function (s) {
 			}
 
 			if (settings.saveArtwork && coverPath){
-				imgPath = coverPath + antiDot(fixName(settingsRegexAlbum(track.album, settings.coverImageTemplate)))+(settings.PNGcovers ? ".png" : ".jpg")
+				imgPath = coverPath + antiDot(settingsRegexAlbum(track.album, settings.coverImageTemplate))+(settings.PNGcovers ? ".png" : ".jpg")
 				if (!fs.existsSync(coverPath)) fs.mkdirpSync(coverPath);
 				if(!fs.existsSync(imgPath)){
 					try{
