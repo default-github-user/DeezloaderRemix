@@ -533,3 +533,26 @@ input[type=search]::-webkit-search-cancel-button {
 .error-banner button:hover {
 	background: rgba(255, 255, 255, 0.1);
 }
+
+td.sortable{
+	-webkit-user-select: none;
+	user-select: none;
+}
+td.sort-asc:after {content: "\25b2";font-size: 0.7em;padding-left: 3px;line-height: 0.7em;}
+td.sort-desc:after {content: "\25bc";font-size: 0.7em;padding-left: 3px;line-height: 0.7em;}
+
+.fab{
+	width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  position: absolute;
+  right: 32px;
+  top: 204px;
+}
+.fab i{
+	font-size: 24px;
+  padding: 16px;
+}
+.clickable{
+  cursor: pointer;
+}

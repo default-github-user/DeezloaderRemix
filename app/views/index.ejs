@@ -816,6 +816,7 @@
 	<div class="modal-content">
 		<div class="trackList-header" v-bind:style="{ 'background-image': `linear-gradient(to bottom, transparent 0%, var(--main-modal-background) 100%), url('${image}')` }">
 			<h4>{{ title }}</h4>
+			<a id="download_all_tracks" v-bind:data-link="link" class="fab deezloader-primary white-text clickable"><i class="material-icons">file_download</i></a>
 		</div>
 		<div class="modal-container">
 			<table>
@@ -851,7 +852,9 @@
 				<table class="highlight col s12">
 					<thead>
 					<tr>
-						<td v-for="data in head" v-on:click="data.sortKey ? sortBy(data.sortKey) : null" v-html="data.title" v-bind:style = "{ 'width': `${data.width ? data.width : 'auto'}`}" v-bind:class="{ 'hide-on-med-and-up' : data.smallonly, 'hide-on-small-only': data.hideonsmall }"></td>
+						<td v-for="data in head" v-on:click="data.sortKey ? sortBy(data.sortKey) : null" v-bind:style = "{ 'width': `${data.width ? data.width : 'auto'}`}" v-bind:class="{ 'hide-on-med-and-up' : data.smallonly, 'hide-on-small-only': data.hideonsmall, 'sort-asc': data.sortKey == sortKey && sortOrder == 'asc', 'sort-desc': data.sortKey == sortKey && sortOrder == 'desc', 'sortable': data.sortKey, 'clickable': data.sortKey }">
+							{{data.title}}
+						</td>
 					</tr>
 					</thead>
 					<tbody>
@@ -875,7 +878,6 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button id="download_all_tracks" v-bind:data-link="link" class="btn btn-flat waves-effect waves-light left"><%= __('Download {{ type }}', {type: '{{ type }}'})%></button>
 		<button class="modal-close waves-effect btn-flat"><%= __('Close')%></button>
 	</div>
 </div>
