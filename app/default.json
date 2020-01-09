@@ -72,7 +72,7 @@
 			"writer": false,
 			"engineer": false,
 			"producer": false,
-			"fullArtists": false
+			"fullArtist": false
 		}
 	}
 }
