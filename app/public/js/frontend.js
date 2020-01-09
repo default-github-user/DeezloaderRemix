@@ -570,7 +570,8 @@ $('#modal_settings_btn_saveSettings').click(function () {
 			author: $('#modal_tags_author').is(':checked'),
 			writer: $('#modal_tags_writer').is(':checked'),
 			engineer: $('#modal_tags_engineer').is(':checked'),
-			producer: $('#modal_tags_producer').is(':checked')
+			producer: $('#modal_tags_producer').is(':checked'),
+			fullArtist: $('#modal_tags_fullArtist').is(':checked')
 		}
 	}
 	let spotifyUser = $('#modal_settings_input_spotifyUser').val()
@@ -707,6 +708,7 @@ function fillSettingsModal(settings, spotifySettings = {clientId: "", clientSecr
 	$('#modal_tags_writer').prop('checked', settings.tags.writer)
 	$('#modal_tags_engineer').prop('checked', settings.tags.engineer)
 	$('#modal_tags_producer').prop('checked', settings.tags.producer)
+	$('#modal_tags_fullArtist').prop('checked', settings.tags.fullArtist)
 
 	M.updateTextFields()
 }

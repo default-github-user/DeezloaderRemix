@@ -1907,6 +1907,50 @@ io.sockets.on('connection', function (s) {
 					track.mixerString = uniqueArray(track.contributor.mixer)
 					if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null")) track.mixerString = track.mixerString.join(separator)
 				}
+
+				let mainArtists = []
+				let featuredArtists = []
+				if (track.contributor.main_artist){
+	        mainArtists = mainArtists.concat(track.contributor.main_artist)
+	      }else if (track.contributor.mainartist){
+	        mainArtists = mainArtists.concat(track.contributor.mainartist)
+	      }
+				if (track.contributor.featuredartist) {
+					featuredArtists = featuredArtists.concat(track.contributor.featuredartist)
+				}
+        if (track.contributor.featuring) {
+					featuredArtists = featuredArtists.concat(track.contributor.featuring)
+				}
+				mainArtists = uniqueArray(mainArtists, true)
+				featuredArtists = uniqueArray(featuredArtists, true)
+				track.fullArtist = ""
+				if (mainArtists.length > 0){
+					let tot = mainArtists.length
+					mainArtists.forEach((art, i) =>{
+						track.fullArtist += art
+						if (tot !== i+1){
+							track.fullArtist += " & "
+						}
+					})
+				}
+				track.featuredArtists = ""
+				if (featuredArtists.length > 0){
+					track.featuredArtists += "feat. "
+					let tot = featuredArtists.length
+					featuredArtists.forEach((art,i) =>{
+						track.featuredArtists += art
+						if (tot !== i+1){
+							if (tot-1 === i+1){
+								track.featuredArtists += " & "
+							}else{
+								track.featuredArtists += ", "
+							}
+						}
+					})
+				}
+				if (track.featuredArtists !== ""){
+					track.fullArtist += " "+track.featuredArtists
+				}
 			}
 
 			if(track.artists || track.artistsString){
@@ -1964,7 +2008,9 @@ io.sockets.on('connection', function (s) {
 		// Generating file name
 		let filename = ""
 		if (settings.saveFullArtists){
-			if (settings.multitagSeparator == "null"){
+			if (track.fullArtist){
+				filename = antiDot(fixName(`${track.fullArtist} - ${track.title}`));
+			}else if (settings.multitagSeparator == "null"){
 				if (Array.isArray(track.artistsString)){
 					filename = antiDot(fixName(`${track.artistsString.join(", ")} - ${track.title}`));
 				}else{
@@ -2574,7 +2620,9 @@ function settingsRegex(track, filename, playlist) {
 		filename = filename.replace(/%album%/g, fixName(track.album.title));
 		if (configFile.userDefined.saveFullArtists){
 			let artistString
-			if (Array.isArray(track.artistsString)){
+			if (track.fullArtist){
+				artistString = track.fullArtist
+			}else if (Array.isArray(track.artistsString)){
 				artistString = track.artistsString.join(", ")
 			}else if (configFile.userDefined.multitagSeparator == "null"){
 				artistString = track.artistsString.split(String.fromCharCode(0)).join(", ")
@@ -2891,6 +2939,9 @@ function getMetadata(buf, track, settings){
 	if(track.replayGain && settings.tags.replayGain)
 		flac.setTag('REPLAYGAIN_TRACK_GAIN=' + track.replayGain);
 
+	if (settings.tags.fullArtist && track.fullArtist)
+		flac.setTag('ARTISTS=' + track.fullArtist);
+
 	if(track.album.picturePath && settings.tags.cover){
 		flac.importPicture(track.album.picturePath);
 	}
@@ -2964,6 +3015,11 @@ function getID3(track, settings){
 		});
 	if (settings.savePlaylistAsCompilation)
 		writer.setFrame('TCMP', 1)
+	if (settings.tags.fullArtist && track.fullArtist)
+		writer.setFrame('TXXX', {
+			description: 'ARTISTS',
+			value: track.fullArtist
+		});
 	writer.addTag();
 	return Buffer.from(writer.arrayBuffer);
 }

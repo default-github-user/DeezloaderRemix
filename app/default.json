@@ -71,7 +71,8 @@
 			"author": false,
 			"writer": false,
 			"engineer": false,
-			"producer": false
+			"producer": false,
+			"fullArtists": false
 		}
 	}
 }
