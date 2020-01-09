@@ -236,11 +236,11 @@
 	"Logged in successfully": "Login bem sucedido",
 	"Deezer is not available in your country": "O Deezer não está disponível no seu país",
 	"Search and Login functions won't work. You should use a VPN if you want them.": "As funções de Pesquisar e Login não irão funcionar. Você deve usar uma VPN se quiser usá-las.",
-	"Do not change": "Do not change",
-	"UPPER CASE": "UPPER CASE",
-	"lower case": "lower case",
-	"Start Case": "Start Case",
-	"Sentence case": "Sentence case",
-	"Case for Title": "Case for Title",
-	"Case for Artist": "Case for Artist"
+	"Do not change": "Não alterar",
+	"UPPER CASE": "LETRAS MAIÚSCULAS",
+	"lower case": "letras minúsculas",
+	"Start Case": "Primeira Letra Em Maiúsculo",
+	"Sentence case": "Coincidir maiúsculas/minúsculas da sentença",
+	"Case for Title": "Tipo da Letra para Título",
+	"Case for Artist": "Tipo da Letra para Artista"
 }
