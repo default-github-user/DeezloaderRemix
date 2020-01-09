@@ -816,8 +816,10 @@
 <div id="modal_artist" class="modal modal-fixed-footer modal-custom-header">
 	<div class="modal-content">
 		<div class="trackList-header" v-bind:style="{ 'background-image': `linear-gradient(to bottom, transparent 0%, var(--main-modal-background) 100%), url('${image}')` }">
-			<h4>{{ title }}</h4>
-			<a id="download_all_tracks" v-bind:data-link="link" class="fab deezloader-primary white-text clickable"><i class="material-icons">file_download</i></a>
+			<div class="valign-wrapper">
+				<h4 style="width: calc(100% - 56px - 8px);display: inline-block; margin:0px;">{{ title }}</h4>
+				<a id="download_all_tracks" v-bind:data-link="link" class="fab deezloader-primary white-text clickable"><i class="material-icons">file_download</i></a>
+			</div>
 		</div>
 		<div class="modal-container">
 			<table>
@@ -839,6 +841,11 @@
 						</div>
 					</td>
 				</tr>
+				</tbody>
+				<tbody id="modal_artist_table_trackList_tbody_noResults" class="hide">
+					<tr>
+						<td class="center"><%= __('Nothing found!')%></td>
+					</tr>
 				</tbody>
 			</table>
 			<div v-if="body" class="row">

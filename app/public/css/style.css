@@ -545,9 +545,7 @@ td.sort-desc:after {content: "\25bc";font-size: 0.7em;padding-left: 3px;line-hei
 	width: 56px;
   height: 56px;
   border-radius: 28px;
-  position: absolute;
-  right: 32px;
-  top: 204px;
+	display: inline-block;
 }
 .fab i{
 	font-size: 24px;

@@ -1040,6 +1040,7 @@ function generateShowArtistButton(link) {
 
 function showArtistModal(link) {
 	$('#modal_artist_table_trackList_tbody_trackList').addClass('hide')
+	$('#modal_artist_table_trackList_tbody_noResults').addClass('hide')
 	$('#modal_artist_table_trackList_tbody_loadingIndicator').removeClass('hide')
 	artistModalApp.title = i18n("Loading...")
 	artistModalApp.image = ""
@@ -1074,12 +1075,12 @@ socket.on("getTrackList", function (data) {
 		}
 
 		// ########################################
-		if(data.reqType == 'artist'){
-			var tableBody = $('#modal_artist_table_trackList_tbody_trackList')
-		} else {
-			var tableBody = $('#modal_trackListSelective_table_trackListSelective_tbody_trackListSelective')
+		if(data.reqType != 'artist'){
+			let tableBody = $('#modal_trackListSelective_table_trackListSelective_tbody_trackListSelective')
+			$(tableBody).html('')
+		}else{
+			let tableBody = null;
 		}
-		$(tableBody).html('')
 		//############################################
 		if (data.reqType == 'artist') {
 			artistModalApp.title = data.response.name
@@ -1095,26 +1096,12 @@ socket.on("getTrackList", function (data) {
 				{title: i18n('Release Date'), hideonsmall:true, sortKey: "release_date"},
 				{title: '', width: "56px"}
 			]
-			artistModalApp.body = trackList
-			/*
-			for (var i = 0; i < trackList.length; i++) {
-				$(tableBody).append(
-					`<tr>
-					<td class="hide-on-med-and-up">
-						<a href="#" class="album_chip" data-link="${trackList[i].link}"><div class="chip"><img src="${trackList[i].cover_small}"/>${(trackList[i].explicit_lyrics ? `<i class="material-icons valignicon tiny materialize-red-text tooltipped" data-tooltip="${i18n("Explicit")}">explicit</i> ` : '')}${trackList[i].title}</div></a>
-						<p class="remove-margin secondary-text">${trackList[i].record_type[0].toUpperCase() + trackList[i].record_type.substring(1)} • ${trackList[i].release_date}</p>
-					</td>
-					<td class="hide-on-small-only breakline"><a href="#" class="album_chip" data-link="${trackList[i].link}"><div class="chip"><img src="${trackList[i].cover_small}"/>${(trackList[i].explicit_lyrics ? `<i class="material-icons valignicon tiny materialize-red-text tooltipped" data-tooltip="${i18n("Explicit")}">explicit</i> ` : '')}${trackList[i].title}</div></a></td>
-					<td class="hide-on-small-only">${trackList[i].release_date}</td>
-					<td class="hide-on-small-only">${trackList[i].record_type[0].toUpperCase() + trackList[i].record_type.substring(1)}</td>
-					</tr>`
-				)
-				generateDownloadLink(trackList[i].link).appendTo(tableBody.children('tr:last')).wrap('<td>')
+			if (_.isEmpty(trackList)){
+				artistModalApp.body = null
+				$('#modal_artist_table_trackList_tbody_noResults').removeClass('hide')
+			}else{
+				artistModalApp.body = trackList
 			}
-			$('.album_chip').click(function(e){
-				e.preventDefault();
-				showTrackListSelective($(this).data('link'), true)
-			})*/
 		} else if(data.reqType == 'playlist') {
 			trackListSelectiveModalApp.type = i18n(data.reqType[0].toUpperCase() + data.reqType.substring(1))
 			trackListSelectiveModalApp.link = `https://www.deezer.com/${data.reqType}/${data.id}`
@@ -1289,7 +1276,6 @@ socket.on("getTrackList", function (data) {
 		}
 		if(data.reqType == 'artist'){
 			$('#modal_artist_table_trackList_tbody_loadingIndicator').addClass('hide')
-			$('#modal_artist_table_trackList_tbody_trackList').removeClass('hide')
 		} else {
 			$('#modal_trackListSelective_table_trackListSelective_tbody_loadingIndicator').addClass('hide')
 			$('#modal_trackListSelective_table_trackListSelective_tbody_trackListSelective').removeClass('hide')
