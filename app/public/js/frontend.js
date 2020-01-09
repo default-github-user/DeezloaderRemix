@@ -1076,11 +1076,10 @@ socket.on("getTrackList", function (data) {
 		}
 
 		// ########################################
+		var tableBody = null
 		if(data.reqType != 'artist'){
-			let tableBody = $('#modal_trackListSelective_table_trackListSelective_tbody_trackListSelective')
+			tableBody = $('#modal_trackListSelective_table_trackListSelective_tbody_trackListSelective')
 			$(tableBody).html('')
-		}else{
-			let tableBody = null;
 		}
 		//############################################
 		if (data.reqType == 'artist') {
