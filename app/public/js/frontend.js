@@ -164,6 +164,7 @@ socket.on("login", function (data) {
 			$('#logged_in_info').removeClass('hide')
 			$('#login_email_btn_container').addClass('hide')
 			$('#modal_login').modal("close")
+			$('#modal_login_input_password').val("")
 			M.toast({html: '<i class="material-icons left">check</i>'+i18n("Logged in successfully"), displayLength: 5000, classes: 'rounded'})
 			loggedIn = true;
 		}
@@ -176,6 +177,9 @@ socket.on("login", function (data) {
 		M.toast({html: '<i class="material-icons left">error</i>'+data.error, displayLength: 5000, classes: 'rounded'})
 		$('#modal_login_input_password').val("")
 		$('#modal_login_input_userToken').val("")
+		if (localStorage.getItem("autologin")){
+			localStorage.removeItem("autologin")
+		}
 		loggedIn = false;
 	}
 	$('#modal_login_btn_login').attr("disabled", false)
@@ -191,12 +195,9 @@ function checkAutologin(){
 			socket.emit('autologin', localStorage.getItem('autologin'), localStorage.getItem('autologin_email'))
 			$('#modal_login_btn_login').attr("disabled", true)
 			$('#modal_login_btn_login').html(i18n("Logging in..."))
-			if (serverMode){
-				$('#modal_login_input_userToken').val(localStorage.getItem('userToken'))
-			}else{
-				$('#modal_login_input_username').val(localStorage.getItem('autologin_email'))
-				$('#modal_login_input_password').val("password")
-			}
+			$('#modal_login_input_userToken').val(localStorage.getItem('userToken'))
+			$('#modal_login_input_username').val(localStorage.getItem('autologin_email'))
+			$('#modal_login_input_password').val("password")
 			M.updateTextFields()
 		}else{
 			socket.emit('init')
