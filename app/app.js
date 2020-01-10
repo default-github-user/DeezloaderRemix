@@ -1838,9 +1838,7 @@ io.sockets.on('connection', function (s) {
 				track.explicit = track.legacyTrack.explicit_lyrics;
 			}
 
-
-			var separator = settings.multitagSeparator
-			if (separator == "null") separator = String.fromCharCode(0)
+			settings.selectedDefaultSeparator = settings.useNullSeparator ? String.fromCharCode(0) : " / "
 
 			// Autoremoves (Album Version) from the title
 			if (settings.removeAlbumVersion){
@@ -1880,34 +1878,28 @@ io.sockets.on('connection', function (s) {
 
 			if(track.contributor){
 				if(track.contributor.composer){
-					track.composerString = uniqueArray(track.contributor.composer)
-					if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null")) track.composerString = track.composerString.join(separator)
+					track.composerArray = uniqueArray(track.contributor.composer)
 				}
 				if(track.contributor.musicpublisher){
-					track.musicpublisherString = uniqueArray(track.contributor.musicpublisher)
-					if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null")) track.musicpublisherString = track.musicpublisherString.join(separator)
+					track.musicpublisherArray = uniqueArray(track.contributor.musicpublisher)
 				}
 				if(track.contributor.producer){
-					track.producerString = uniqueArray(track.contributor.producer)
-					if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null")) track.producerString = track.producerString.join(separator)
+					track.producerArray = uniqueArray(track.contributor.producer)
 				}
 				if(track.contributor.engineer){
-					track.engineerString = uniqueArray(track.contributor.engineer)
-					if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null")) track.engineerString = track.engineerString.join(separator)
+					track.engineerArray = uniqueArray(track.contributor.engineer)
 				}
 				if(track.contributor.writer){
-					track.writerString = uniqueArray(track.contributor.writer)
-					if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null")) track.writerString = track.writerString.join(separator)
+					track.writerArray = uniqueArray(track.contributor.writer)
 				}
 				if(track.contributor.author){
-					track.authorString = uniqueArray(track.contributor.author)
-					if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null")) track.authorString = track.authorString.join(separator)
+					track.authorArray = uniqueArray(track.contributor.author)
 				}
 				if(track.contributor.mixer){
-					track.mixerString = uniqueArray(track.contributor.mixer)
-					if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null")) track.mixerString = track.mixerString.join(separator)
+					track.mixerArray = uniqueArray(track.contributor.mixer)
 				}
 
+				// creating the "& and feat." preset
 				let mainArtists = []
 				let featuredArtists = []
 				if (track.contributor.main_artist){
@@ -1953,34 +1945,30 @@ io.sockets.on('connection', function (s) {
 				}
 			}
 
-			if(track.artists || track.artistsString){
-				if (!track.artistsString){
-					track.artistsString = []
-					artistArray = []
+			if(track.artists || track.artistsArray){
+				if (!track.artistsArray){
+					track.artistsArray = []
+					artistsArray = []
 					track.artists.forEach(function(artist){
-						artistArray.push(artist.name)
+						artistsArray.push(artist.name)
 					})
 				}else{
-					if (! Array.isArray(track.artistsString)){
-						track.artistsString = [track.artistsString,]
+					if (! Array.isArray(track.artistsArray)){
+						track.artistsArray = [track.artistsArray,]
 					}
-					artistArray = track.artistsString
+					artistsArray = track.artistsArray
 				}
-				track.artistsString = uniqueArray(artistArray)
-				let posMainArtist = track.artistsString.indexOf(track.album.artist.name)
+				track.artistsArray = uniqueArray(artistsArray)
+				let posMainArtist = track.artistsArray.indexOf(track.album.artist.name)
 				if (posMainArtist !== -1 && posMainArtist !== 0){
-					let element = track.artistsString[posMainArtist]
-					track.artistsString.splice(posMainArtist, 1)
-					track.artistsString.splice(0, 0, element)
+					let element = track.artistsArray[posMainArtist]
+					track.artistsArray.splice(posMainArtist, 1)
+					track.artistsArray.splice(0, 0, element)
 				}
-				track.mainArtist = track.artistsString[0]
-				if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null")) track.artistsString = track.artistsString.join(separator)
+				track.mainArtist = track.artistsArray[0]
 			}
 			if (track.album.genre){
-				if (!(track.selectedFormat == 9 && settings.multitagSeparator == "null"))
-					track.album.genreString = track.album.genre.join(separator)
-				else
-					track.album.genreString = track.album.genre
+				track.album.genreArray = track.album.genre
 			}
 
 			if (track.date){
@@ -2010,14 +1998,10 @@ io.sockets.on('connection', function (s) {
 		if (settings.saveFullArtists){
 			if (track.fullArtist){
 				filename = antiDot(fixName(`${track.fullArtist} - ${track.title}`));
-			}else if (settings.multitagSeparator == "null"){
-				if (Array.isArray(track.artistsString)){
-					filename = antiDot(fixName(`${track.artistsString.join(", ")} - ${track.title}`));
-				}else{
-					filename = antiDot(fixName(`${track.artistsString.split(String.fromCharCode(0)).join(", ")} - ${track.title}`))
-				}
+			}else if (settings.multitagSeparator != "default" && settings.multitagSeparator != "andFeat"){
+				filename = antiDot(fixName(`${track.artistsArray.join(settings.multitagSeparator)} - ${track.title}`));
 			}else{
-				filename = antiDot(fixName(`${track.artistsString} - ${track.title}`));
+				filename = antiDot(fixName(`${track.artistsArray.join(", ")} - ${track.title}`));
 			}
 		}else{
 			filename = antiDot(fixName(`${track.artist.name} - ${track.title}`));
@@ -2622,12 +2606,10 @@ function settingsRegex(track, filename, playlist) {
 			let artistString
 			if (track.fullArtist){
 				artistString = track.fullArtist
-			}else if (Array.isArray(track.artistsString)){
-				artistString = track.artistsString.join(", ")
-			}else if (configFile.userDefined.multitagSeparator == "null"){
-				artistString = track.artistsString.split(String.fromCharCode(0)).join(", ")
+			}else if (configFile.userDefined.multitagSeparator != "default" && configFile.userDefined.multitagSeparator != "andFeat"){
+				artistString = track.artistsArray.join(configFile.userDefined.multitagSeparator)
 			}else{
-				artistString = track.artistsString
+				artistString = track.artistsArray.join(", ")
 			}
 			filename = filename.replace(/%artist%/g, fixName(artistString));
 		}else{
@@ -2844,14 +2826,41 @@ function getMetadata(buf, track, settings){
 		flac.setTag('ITUNESADVISORY=' + (track.explicit ? "1" : "0"));
 	if (settings.tags.isrc)
 		flac.setTag('ISRC=' + track.ISRC);
-	if (settings.tags.artist && track.artistsString)
-		if (Array.isArray(track.artistsString)){
-			track.artistsString.forEach(x=>{
-				flac.setTag('ARTIST=' + changeCase(x, settings.artistCasing));
-			});
-		}else{
-			flac.setTag('ARTIST=' + changeCase(track.artistsString, settings.artistCasing));
+
+	if (settings.tags.artist){
+		switch (settings.multitagSeparator) {
+			case "default":
+				if (Array.isArray(track.artistsArray)){
+					track.artistsArray.forEach(x=>{
+						flac.setTag('ARTIST=' + changeCase(x, settings.artistCasing));
+					});
+				}else{
+					flac.setTag('ARTIST=' + changeCase(track.artistsArray, settings.artistCasing));
+				}
+			break;
+			case "andFeat":
+				flac.setTag('ARTIST=' + changeCase(track.fullArtist, settings.artistCasing));
+				if (Array.isArray(track.artistsArray)){
+					track.artistsArray.forEach(x=>{
+						flac.setTag('ARTISTS=' + changeCase(x, settings.artistCasing));
+					});
+				}else{
+					flac.setTag('ARTISTS=' + changeCase(track.artistsArray, settings.artistCasing));
+				}
+			break;
+			default:
+				flac.setTag('ARTIST=' + changeCase(track.artistsArray.join(settings.multitagSeparator), settings.artistCasing));
+				if (Array.isArray(track.artistsArray)){
+					track.artistsArray.forEach(x=>{
+						flac.setTag('ARTISTS=' + changeCase(x, settings.artistCasing));
+					});
+				}else{
+					flac.setTag('ARTISTS=' + changeCase(track.artistsArray, settings.artistCasing));
+				}
+			break;
 		}
+	}
+
 	if (settings.tags.discTotal)
 		flac.setTag('DISCTOTAL='+track.album.discTotal);
 	if (settings.tags.length)
@@ -2860,13 +2869,13 @@ function getMetadata(buf, track, settings){
 		flac.setTag('BARCODE=' + track.album.barcode);
 	if (track.unsyncLyrics && settings.tags.unsynchronisedLyrics)
 		flac.setTag('LYRICS='+track.unsyncLyrics.lyrics);
-	if (track.album.genreString && settings.tags.genre)
-		if (Array.isArray(track.album.genreString)){
-			track.album.genreString.forEach(x=>{
+	if (track.album.genreArray && settings.tags.genre)
+		if (Array.isArray(track.album.genreArray)){
+			track.album.genreArray.forEach(x=>{
 				flac.setTag('GENRE=' + x);
 			});
 		}else{
-			flac.setTag('GENRE=' + track.album.genreString);
+			flac.setTag('GENRE=' + track.album.genreArray);
 		}
 	if (track.copyright && settings.tags.copyright)
 		flac.setTag('COPYRIGHT=' + track.copyright);
@@ -2880,67 +2889,64 @@ function getMetadata(buf, track, settings){
 		flac.setTag('BPM=' + track.bpm);
 	if(track.album.label && settings.tags.publisher)
 		flac.setTag('PUBLISHER=' + track.album.label);
-	if(track.composerString && settings.tags.composer)
-		if (Array.isArray(track.composerString)){
-			track.composerString.forEach(x=>{
+	if(track.composerArray && settings.tags.composer)
+		if (Array.isArray(track.composerArray)){
+			track.composerArray.forEach(x=>{
 				flac.setTag('COMPOSER=' + x);
 			});
 		}else{
-			flac.setTag('COMPOSER=' + track.composerString);
+			flac.setTag('COMPOSER=' + track.composerArray);
 		}
-	if(track.musicpublisherString && settings.tags.musicpublisher)
-		if (Array.isArray(track.musicpublisherString)){
-			track.musicpublisherString.forEach(x=>{
+	if(track.musicpublisherArray && settings.tags.musicpublisher)
+		if (Array.isArray(track.musicpublisherArray)){
+			track.musicpublisherArray.forEach(x=>{
 				flac.setTag('ORGANIZATION=' + x);
 			});
 		}else{
-			flac.setTag('ORGANIZATION=' + track.musicpublisherString);
+			flac.setTag('ORGANIZATION=' + track.musicpublisherArray);
 		}
-	if(track.mixerString && settings.tags.mixer)
-		if (Array.isArray(track.mixerString)){
-			track.mixerString.forEach(x=>{
+	if(track.mixerArray && settings.tags.mixer)
+		if (Array.isArray(track.mixerArray)){
+			track.mixerArray.forEach(x=>{
 				flac.setTag('MIXER=' + x);
 			});
 		}else{
-			flac.setTag('MIXER=' + track.mixerString);
+			flac.setTag('MIXER=' + track.mixerArray);
 		}
-	if(track.authorString && settings.tags.author)
-		if (Array.isArray(track.authorString)){
-			track.authorString.forEach(x=>{
+	if(track.authorArray && settings.tags.author)
+		if (Array.isArray(track.authorArray)){
+			track.authorArray.forEach(x=>{
 				flac.setTag('AUTHOR=' + x);
 			});
 		}else{
-			flac.setTag('AUTHOR=' + track.authorString);
+			flac.setTag('AUTHOR=' + track.authorArray);
 		}
-	if(track.writerString && settings.tags.writer)
-		if (Array.isArray(track.writerString)){
-			track.writerString.forEach(x=>{
+	if(track.writerArray && settings.tags.writer)
+		if (Array.isArray(track.writerArray)){
+			track.writerArray.forEach(x=>{
 				flac.setTag('WRITER=' + x);
 			});
 		}else{
-			flac.setTag('WRITER=' + track.writerString);
+			flac.setTag('WRITER=' + track.writerArray);
 		}
-	if(track.engineerString && settings.tags.engineer)
-		if (Array.isArray(track.engineerString)){
-			track.engineerString.forEach(x=>{
+	if(track.engineerArray && settings.tags.engineer)
+		if (Array.isArray(track.engineerArray)){
+			track.engineerArray.forEach(x=>{
 				flac.setTag('ENGINEER=' + x);
 			});
 		}else{
-			flac.setTag('ENGINEER=' + track.engineerString);
+			flac.setTag('ENGINEER=' + track.engineerArray);
 		}
-	if(track.producerString && settings.tags.producer)
-		if (Array.isArray(track.producerString)){
-			track.producerString.forEach(x=>{
+	if(track.producerArray && settings.tags.producer)
+		if (Array.isArray(track.producerArray)){
+			track.producerArray.forEach(x=>{
 				flac.setTag('PRODUCER=' + x);
 			});
 		}else{
-			flac.setTag('PRODUCER=' + track.producerString);
+			flac.setTag('PRODUCER=' + track.producerArray);
 		}
 	if(track.replayGain && settings.tags.replayGain)
 		flac.setTag('REPLAYGAIN_TRACK_GAIN=' + track.replayGain);
-
-	if (settings.tags.fullArtist && track.fullArtist)
-		flac.setTag('ARTISTS=' + track.fullArtist);
 
 	if(track.album.picturePath && settings.tags.cover){
 		flac.importPicture(track.album.picturePath);
@@ -2953,8 +2959,29 @@ function getID3(track, settings){
 	const writer = new ID3Writer(Buffer.alloc(0));
 	if (settings.tags.title)
 		writer.setFrame('TIT2', changeCase(track.title, settings.titleCasing))
-	if (settings.tags.artist)
-		writer.setFrame('TPE1', [changeCase(track.artistsString, settings.artistCasing)])
+
+	if (settings.tags.artist){
+		switch (settings.multitagSeparator) {
+			case "default":
+				writer.setFrame('TPE1', [changeCase(track.artistsArray.join(settings.selectedDefaultSeparator), settings.artistCasing)])
+			break;
+			case "andFeat":
+				writer.setFrame('TPE1', [track.fullArtist])
+				writer.setFrame('TXXX', {
+					description: 'ARTISTS',
+					value: changeCase(changeCase(track.artistsArray.join(settings.selectedDefaultSeparator), settings.artistCasing), settings.artistCasing)
+				});
+			break;
+			default:
+				writer.setFrame('TPE1', [changeCase(track.artistsArray.join(settings.multitagSeparator), settings.artistCasing)])
+				writer.setFrame('TXXX', {
+					description: 'ARTISTS',
+					value: changeCase(changeCase(track.artistsArray.join(settings.selectedDefaultSeparator), settings.artistCasing), settings.artistCasing)
+				});
+			break;
+		}
+	}
+
 	if (settings.tags.album)
 		writer.setFrame('TALB', track.album.title)
 	if (settings.tags.albumArtist && track.album.artist){
@@ -2989,8 +3016,8 @@ function getID3(track, settings){
 		writer.setFrame('USLT', track.unsyncLyrics);
 	if(track.album.label && settings.tags.publisher)
 		writer.setFrame('TPUB', track.album.label);
-	if(track.album.genreString && settings.tags.genre)
-		writer.setFrame('TCON', [track.album.genreString]);
+	if(track.album.genreArray && settings.tags.genre)
+		writer.setFrame('TCON', [track.album.genreArray.join(settings.multitagSeparator)]);
 	if(track.copyright && settings.tags.copyright)
 		writer.setFrame('TCOP', track.copyright);
 	if (0 < parseInt(track.date.year)) {
@@ -3001,8 +3028,8 @@ function getID3(track, settings){
 	}
 	if (0 < parseInt(track.bpm) && settings.tags.bpm)
 		writer.setFrame('TBPM', track.bpm);
-	if(track.composerString && settings.tags.composer)
-		writer.setFrame('TCOM', [track.composerString]);
+	if(track.composerArray && settings.tags.composer)
+		writer.setFrame('TCOM', [track.composerArray.join(settings.multitagSeparator)]);
 	if(track.replayGain && settings.tags.replayGain)
 		writer.setFrame('TXXX', {
 			description: 'REPLAYGAIN_TRACK_GAIN',
@@ -3015,11 +3042,6 @@ function getID3(track, settings){
 		});
 	if (settings.savePlaylistAsCompilation)
 		writer.setFrame('TCMP', 1)
-	if (settings.tags.fullArtist && track.fullArtist)
-		writer.setFrame('TXXX', {
-			description: 'ARTISTS',
-			value: track.fullArtist
-		});
 	writer.addTag();
 	return Buffer.from(writer.arrayBuffer);
 }

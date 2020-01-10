@@ -243,5 +243,9 @@
 	"Sentence case": "Sentence case",
 	"Case for Title": "Case for Title",
 	"Case for Artist": "Case for Artist",
-	"Full artist list": "Full artist list"
+	"Default": "Default",
+	"& and feat.": "& and feat.",
+	"Artist Tag Format": "Artist Tag Format",
+	"Move featured artists to trackname": "Move featured artists to trackname",
+	"Use Null Separator in MP3s": "Use Null Separator in MP3s"
 }

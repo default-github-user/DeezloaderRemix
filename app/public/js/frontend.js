@@ -539,6 +539,8 @@ $('#modal_settings_btn_saveSettings').click(function () {
 		dateFormatYear: $('#modal_settings_select_dateFormatYear').val(),
 		savePlaylistAsCompilation: $('#modal_settings_cbox_savePlaylistAsCompilation').is(':checked'),
 		removeAlbumVersion : $('#modal_settings_cbox_removeAlbumVersion').is(':checked'),
+		moveFeaturedToTitle : $('#modal_settings_cbox_moveFeaturedToTitle').is(':checked'),
+		useNullSeparator : $('#modal_settings_cbox_useNullSeparator').is(':checked'),
 		saveID3v1 : $('#modal_settings_cbox_saveID3v1').is(':checked'),
 		titleCasing : $('#modal_settings_select_titleCasing').val(),
 		artistCasing : $('#modal_settings_select_artistCasing').val(),
@@ -571,7 +573,6 @@ $('#modal_settings_btn_saveSettings').click(function () {
 			writer: $('#modal_tags_writer').is(':checked'),
 			engineer: $('#modal_tags_engineer').is(':checked'),
 			producer: $('#modal_tags_producer').is(':checked'),
-			fullArtist: $('#modal_tags_fullArtist').is(':checked')
 		}
 	}
 	let spotifyUser = $('#modal_settings_input_spotifyUser').val()
@@ -671,6 +672,8 @@ function fillSettingsModal(settings, spotifySettings = {clientId: "", clientSecr
 	$('#modal_settings_select_dateFormatYear').val(settings.dateFormatYear).formSelect()
 	$('#modal_settings_cbox_savePlaylistAsCompilation').prop('checked', settings.savePlaylistAsCompilation)
 	$('#modal_settings_cbox_removeAlbumVersion').prop('checked', settings.removeAlbumVersion)
+	$('#modal_settings_cbox_moveFeaturedToTitle').prop('checked', settings.moveFeaturedToTitle)
+	$('#modal_settings_cbox_useNullSeparator').prop('checked', settings.useNullSeparator)
 	$('#modal_settings_cbox_saveID3v1').prop('checked', settings.saveID3v1)
 	$('#modal_settings_select_titleCasing').val(settings.titleCasing).formSelect()
 	$('#modal_settings_select_artistCasing').val(settings.artistCasing).formSelect()
@@ -708,7 +711,6 @@ function fillSettingsModal(settings, spotifySettings = {clientId: "", clientSecr
 	$('#modal_tags_writer').prop('checked', settings.tags.writer)
 	$('#modal_tags_engineer').prop('checked', settings.tags.engineer)
 	$('#modal_tags_producer').prop('checked', settings.tags.producer)
-	$('#modal_tags_fullArtist').prop('checked', settings.tags.fullArtist)
 
 	M.updateTextFields()
 }

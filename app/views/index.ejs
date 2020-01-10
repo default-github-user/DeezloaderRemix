@@ -369,16 +369,17 @@
 		<div class="row">
 			<div class="input-field col s12">
 				<select name="multitagSeparator" id="modal_settings_select_multitagSeparator">
-					<option value="null"><%= __('Null Character')%></option>
+					<option value="default"><%= __('Default')%></option>
+					<option value="andFeat"><%= __('& and feat.')%></option>
+					<option value=" & ">& <%= __('with space')%></option>
 					<option value=",">,</option>
 					<option value=", ">, <%= __('with space')%></option>
 					<option value="/">/</option>
 					<option value=" / ">/ <%= __('with space')%></option>
 					<option value=";">;</option>
 					<option value="; ">; <%= __('with space')%></option>
-					<option value=" & ">& <%= __('with space')%></option>
 				</select>
-				<label for="modal_settings_select_multitagSeparator"><%= __('Multitag Separator')%></label>
+				<label for="modal_settings_select_multitagSeparator"><%= __('Artist Tag Format')%></label>
 			</div>
 			<div class="input-field col s12 m6">
 				<select name="dateFormat" id="modal_settings_select_dateFormat">
@@ -408,6 +409,20 @@
 				<span><%= __('Remove \"(Album Version)\" from tracknames')%></span>
 				<label>
 					<input type="checkbox" id="modal_settings_cbox_removeAlbumVersion" class="filled-in"/>
+					<span class="lever"></span>
+				</label>
+			</div>
+			<div class="col s12 switch settings_switch">
+				<span><%= __('Move featured artists to trackname')%> [PLACEHOLDER NOT WORKING]</span>
+				<label>
+					<input type="checkbox" id="modal_settings_cbox_moveFeaturedToTitle" class="filled-in"/>
+					<span class="lever"></span>
+				</label>
+			</div>
+			<div class="col s12 switch settings_switch">
+				<span><%= __('Use Null Separator in MP3s')%></span>
+				<label>
+					<input type="checkbox" id="modal_settings_cbox_useNullSeparator" class="filled-in"/>
 					<span class="lever"></span>
 				</label>
 			</div>
@@ -644,12 +659,6 @@
 				<label>
 					<input type="checkbox" id="modal_tags_producer" class="filled-in"/>
 					<span><%= __('Producer')%></span>
-				</label>
-			</p>
-			<p class="col s12 m4">
-				<label>
-					<input type="checkbox" id="modal_tags_fullArtist" class="filled-in"/>
-					<span><%= __('Full artist list')%></span>
 				</label>
 			</p>
 		</div>

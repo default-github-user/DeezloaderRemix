@@ -40,6 +40,8 @@
 		"dateFormatYear": "4",
 		"savePlaylistAsCompilation": false,
 		"removeAlbumVersion": false,
+		"moveFeaturedToTitle": false,
+		"useNullSeparator": false,
 		"saveID3v1": true,
 		"titleCasing": "nothing",
 		"artistCasing": "nothing",
@@ -71,8 +73,7 @@
 			"author": false,
 			"writer": false,
 			"engineer": false,
-			"producer": false,
-			"fullArtist": false
+			"producer": false
 		}
 	}
 }
