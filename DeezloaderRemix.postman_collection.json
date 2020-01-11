@@ -1079,6 +1079,40 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Clear Queue",
+			"item": [
+				{
+					"name": "Clear Queue",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:1730/api/clearqueue/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1730",
+							"path": [
+								"api",
+								"clearqueue",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}

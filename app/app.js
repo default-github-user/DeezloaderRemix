@@ -1033,7 +1033,7 @@ io.sockets.on('connection', function (s) {
 			localDownloadQueue.splice(localDownloadQueue.indexOf(downloadQueue[queueId].id), 1);
 			delete downloadQueue[queueId]
 		} else {
-			io.sockets.emit("cancelDownload", {err: "queueID not found in downloadQueue"})
+			io.sockets.emit("cancelDownload", {err: "queueId not found in downloadQueue"})
 		}
 
 		if (cancel) {
@@ -2533,11 +2533,24 @@ app.all('/api/canceldownload/', function (req, res) {
 						res.writeHead(200, { 'Content-Type': 'application/json' });
 					}
 					response = `Removed ${data.queueId} from queue`
-					res.end(JSON.stringify({'Message': response, 'queueID': data.queueId}));
+					res.end(JSON.stringify({'Message': response, 'queueId': data.queueId}));
 				}
 			})
 		}
 	}
+});
+
+app.get('/api/clearqueue/', function (req, res) {
+	let listOfIDs = []
+	for (let i in downloadQueue) {
+		listOfIDs.push(i)
+	}
+	clientsocket.emit('cancelAllDownloads', {queueList: listOfIDs})
+
+	clientsocket.on("cancelAllDownloads", function (data) {
+		response = 'Download queue cleared'
+		res.status(200).send({"Message": response});
+	})
 });
 
 // Helper functions
