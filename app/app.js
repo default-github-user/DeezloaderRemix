@@ -2044,9 +2044,9 @@ io.sockets.on('connection', function (s) {
 
 		if (
 			track.album.discTotal > 1 && (
-			(settings.createAlbumFolder && settings.createCDFolder) && (!settings.plName ||
-			(settings.plName && settings.savePlaylistAsCompilation) ||
-			(settings.plName && settings.createStructurePlaylist))
+			(settings.createAlbumFolder && settings.createCDFolder) &&
+			(!settings.singleTrack || (settings.singleTrack && settings.createSingleFolder)) &&
+			(!settings.plName || (settings.plName && settings.savePlaylistAsCompilation) || (settings.plName && settings.createStructurePlaylist))
 		)){
 			filepath += `CD${track.discNumber + path.sep}`
 		}
