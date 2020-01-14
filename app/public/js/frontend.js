@@ -349,6 +349,7 @@ $(document).ready(function () {
 		if (preview_track.currentTime > preview_track.duration-1){
 			$(preview_track).animate({volume: 0}, 800)
 			preview_stopped = true
+			$('a[playing] > .preview_controls').css({opacity:0})
 			$("*").removeAttr("playing")
 			$('.preview_controls').text("play_arrow")
 			$('.preview_playlist_controls').text("play_arrow")
