@@ -2573,7 +2573,7 @@ function updateSettingsFile(config, value) {
 }
 
 // Fixes the name removing characters that could cause problems on the system
-function fixName (txt, char=' ') {
+function fixName (txt, char='') {
 	txt = txt+""
 	const regEx = /[\0\/\\:*?"<>|]/g;
 	txt = txt.replace(regEx, char);
@@ -2674,20 +2674,20 @@ function settingsRegex(track, filename, playlist) {
  */
 function settingsRegexAlbum(album, foldername) {
 	try{
-		foldername = foldername.replace(/%album%/g, fixName(album.title, '-'))
-		foldername = foldername.replace(/%artist%/g, fixName(album.artist.name, '-'))
-		foldername = foldername.replace(/%artist_id%/g, fixName(album.artist.id, '-'));
-		foldername = foldername.replace(/%year%/g, fixName(album.year, '-'))
-		foldername = foldername.replace(/%date%/g, fixName(album.date, '-'))
+		foldername = foldername.replace(/%album%/g, fixName(album.title))
+		foldername = foldername.replace(/%artist%/g, fixName(album.artist.name))
+		foldername = foldername.replace(/%artist_id%/g, fixName(album.artist.id));
+		foldername = foldername.replace(/%year%/g, fixName(album.year))
+		foldername = foldername.replace(/%date%/g, fixName(album.date))
 		if (album.recordType){
-			foldername = foldername.replace(/%type%/g, fixName(album.recordType[0].toUpperCase() + album.recordType.substring(1), '-'))
+			foldername = foldername.replace(/%type%/g, fixName(album.recordType[0].toUpperCase() + album.recordType.substring(1)))
 		}else{
 			foldername = foldername.replace(/%type%/g, "")
 		}
-		foldername = foldername.replace(/%label%/g, fixName(album.label, '-'))
-		foldername = foldername.replace(/%upc%/g, fixName(album.barcode ? album.barcode : "Unknown", '-'));
-		foldername = foldername.replace(/%album_id%/g, fixName(album.id, '-'));
-		foldername = foldername.replace(/%explicit%/g, fixName((album.explicit ? (foldername.indexOf(/[^%]explicit/g)>-1 ? "" : "(Explicit) ") : ""), '-'))
+		foldername = foldername.replace(/%label%/g, fixName(album.label))
+		foldername = foldername.replace(/%upc%/g, fixName(album.barcode ? album.barcode : "Unknown"));
+		foldername = foldername.replace(/%album_id%/g, fixName(album.id));
+		foldername = foldername.replace(/%explicit%/g, fixName((album.explicit ? (foldername.indexOf(/[^%]explicit/g)>-1 ? "" : "(Explicit) ") : "")))
 		if (album.compilation){
 			foldername = foldername.replace(/%bitrate%/g, "Variable")
 			foldername = foldername.replace(/%genre%/g, "Compilation")
@@ -2714,7 +2714,7 @@ function settingsRegexAlbum(album, foldername) {
 				default:
 					foldername = foldername.replace(/%bitrate%/g, "128")
 			}
-			foldername = foldername.replace(/%genre%/g, fixName(album.genre ? (Array.isArray(album.genre) ? album.genre[0] : album.genre) : "Unknown", '-'))
+			foldername = foldername.replace(/%genre%/g, fixName(album.genre ? (Array.isArray(album.genre) ? album.genre[0] : album.genre) : "Unknown"))
 		}
 		foldername = foldername.replace(/[/\\]/g, path.sep)
 		return foldername.trim();
@@ -2725,19 +2725,19 @@ function settingsRegexAlbum(album, foldername) {
 }
 
 function settingsRegexArtist(artist, foldername) {
-	foldername = foldername.replace(/%name%/g, fixName(artist.name, '-'));
-	foldername = foldername.replace(/%artist_id%/g, fixName(artist.id, '-'));
+	foldername = foldername.replace(/%name%/g, fixName(artist.name));
+	foldername = foldername.replace(/%artist_id%/g, fixName(artist.id));
 	foldername = foldername.replace(/[/\\]/g, path.sep)
 	return foldername.trim();
 }
 
 function settingsRegexPlaylist(playlist, foldername){
-	foldername = foldername.replace(/%owner%/g, fixName(playlist.artist.name, '-'));
-	foldername = foldername.replace(/%owner_id%/g, fixName(playlist.artist.id, '-'));
-	foldername = foldername.replace(/%name%/g, fixName(playlist.title, '-'));
-	foldername = foldername.replace(/%year%/g, fixName(playlist.year, '-'));
-	foldername = foldername.replace(/%date%/g, fixName(playlist.date, '-'));
-	foldername = foldername.replace(/%playlist_id%/g, fixName(playlist.id, '-'));
+	foldername = foldername.replace(/%owner%/g, fixName(playlist.artist.name));
+	foldername = foldername.replace(/%owner_id%/g, fixName(playlist.artist.id));
+	foldername = foldername.replace(/%name%/g, fixName(playlist.title));
+	foldername = foldername.replace(/%year%/g, fixName(playlist.year));
+	foldername = foldername.replace(/%date%/g, fixName(playlist.date));
+	foldername = foldername.replace(/%playlist_id%/g, fixName(playlist.id));
 	foldername = foldername.replace(/[/\\]/g, path.sep)
 	return foldername.trim();
 }
