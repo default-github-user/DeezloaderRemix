@@ -6,6 +6,12 @@ body, .tabs, .card, .modal, input, .collapsible-header{
   background-color: #121212;
   color: white;
 }
+input[type=range]::-webkit-slider-runnable-track{
+	background-color: #0B0B0B;
+}
+input[type=range] {
+  border: 1px solid #121212;
+}
 /*nav{
   filter: hue-rotate(220deg);
 }

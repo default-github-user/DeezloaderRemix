@@ -241,6 +241,10 @@
 				</select>
 				<label for="modal_settings_select_lang"><%= __('Language')%></label>
 			</div>
+			<div class="range-field col s12 m6">
+				<label for="modal_settings_range_previewVolume"><%= __('Preview Volume')%></label>
+		    <input type="range" min="0" max="100" id="modal_settings_range_previewVolume"/>
+			</div>
 			<div class="col s12 switch settings_switch">
 				<span><%= __('Fallback to lower bitrates if preferred is not available')%></span>
 				<label>
