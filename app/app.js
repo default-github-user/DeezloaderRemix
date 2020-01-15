@@ -1997,20 +1997,20 @@ io.sockets.on('connection', function (s) {
 		let filename = ""
 		if (settings.saveFullArtists){
 			if (track.fullArtist){
-				filename = antiDot(fixName(`${track.fullArtist} - ${track.title}`));
+				filename = antiDot(fixName(`${track.fullArtist} - ${track.title}`, settings.illegalCharacterReplacer));
 			}else if (settings.multitagSeparator != "default" && settings.multitagSeparator != "andFeat"){
-				filename = antiDot(fixName(`${track.artistsArray.join(settings.multitagSeparator)} - ${track.title}`));
+				filename = antiDot(fixName(`${track.artistsArray.join(settings.multitagSeparator)} - ${track.title}`, settings.illegalCharacterReplacer));
 			}else{
-				filename = antiDot(fixName(`${track.artistsArray.join(", ")} - ${track.title}`));
+				filename = antiDot(fixName(`${track.artistsArray.join(", ")} - ${track.title}`, settings.illegalCharacterReplacer));
 			}
 		}else{
-			filename = antiDot(fixName(`${track.artist.name} - ${track.title}`));
+			filename = antiDot(fixName(`${track.artist.name} - ${track.title}`, settings.illegalCharacterReplacer));
 		}
 		if (settings.filename) {
 			filename = antiDot(settingsRegex(track, settings.filename, settings.playlist))
 		}
 
-		filename = antiDot(fixName(filename))
+		filename = antiDot(fixName(filename, settings.illegalCharacterReplacer))
 
 		// TODO: Move to a separate function
 		// Generating file path
@@ -2573,7 +2573,7 @@ function updateSettingsFile(config, value) {
 }
 
 // Fixes the name removing characters that could cause problems on the system
-function fixName (txt, char='') {
+function fixName (txt, char='_') {
 	txt = txt+""
 	const regEx = /[\0\/\\:*?"<>|]/g;
 	txt = txt.replace(regEx, char);
@@ -2613,8 +2613,8 @@ function initFolders() {
  */
 function settingsRegex(track, filename, playlist) {
 	try{
-		filename = filename.replace(/%title%/g, fixName(track.title));
-		filename = filename.replace(/%album%/g, fixName(track.album.title));
+		filename = filename.replace(/%title%/g, fixName(track.title, configFile.userDefined.illegalCharacterReplacer));
+		filename = filename.replace(/%album%/g, fixName(track.album.title, configFile.userDefined.illegalCharacterReplacer));
 		if (configFile.userDefined.saveFullArtists){
 			let artistString
 			if (track.fullArtist){
@@ -2624,41 +2624,41 @@ function settingsRegex(track, filename, playlist) {
 			}else{
 				artistString = track.artistsArray.join(", ")
 			}
-			filename = filename.replace(/%artist%/g, fixName(artistString));
+			filename = filename.replace(/%artist%/g, fixName(artistString, configFile.userDefined.illegalCharacterReplacer));
 		}else{
-			filename = filename.replace(/%artist%/g, fixName(track.artist.name));
+			filename = filename.replace(/%artist%/g, fixName(track.artist.name, configFile.userDefined.illegalCharacterReplacer));
 		}
-		filename = filename.replace(/%track_id%/g, fixName(track.id));
-		filename = filename.replace(/%album_id%/g, fixName(track.album.id));
-		filename = filename.replace(/%artist_id%/g, fixName(track.artist.id));
-		filename = filename.replace(/%year%/g, fixName(track.date.year));
-		filename = filename.replace(/%date%/g, fixName(track.album.date));
-		filename = filename.replace(/%label%/g, fixName(track.album.label));
+		filename = filename.replace(/%track_id%/g, fixName(track.id, configFile.userDefined.illegalCharacterReplacer));
+		filename = filename.replace(/%album_id%/g, fixName(track.album.id, configFile.userDefined.illegalCharacterReplacer));
+		filename = filename.replace(/%artist_id%/g, fixName(track.artist.id, configFile.userDefined.illegalCharacterReplacer));
+		filename = filename.replace(/%year%/g, fixName(track.date.year, configFile.userDefined.illegalCharacterReplacer));
+		filename = filename.replace(/%date%/g, fixName(track.album.date, configFile.userDefined.illegalCharacterReplacer));
+		filename = filename.replace(/%label%/g, fixName(track.album.label, configFile.userDefined.illegalCharacterReplacer));
 		if(typeof track.trackNumber != 'undefined'){
 			if(configFile.userDefined.padtrck){
-				 filename = filename.replace(/%number%/g, fixName(pad(track.trackNumber, (parseInt(configFile.userDefined.paddingSize)>0 ? parseInt(configFile.userDefined.paddingSize) : track.album.trackTotal))));
+				 filename = filename.replace(/%number%/g, fixName(pad(track.trackNumber, (parseInt(configFile.userDefined.paddingSize)>0 ? parseInt(configFile.userDefined.paddingSize) : track.album.trackTotal)), configFile.userDefined.illegalCharacterReplacer));
 			}else{
-				filename = filename.replace(/%number%/g, fixName(track.trackNumber));
+				filename = filename.replace(/%number%/g, fixName(track.trackNumber, configFile.userDefined.illegalCharacterReplacer));
 			}
 		} else {
 			filename = filename.replace(/%number%/g, '');
 		}
 		if (playlist){
-			filename = filename.replace(/%playlist_id%/g, fixName(playlist.id));
+			filename = filename.replace(/%playlist_id%/g, fixName(playlist.id, configFile.userDefined.illegalCharacterReplacer));
 		}
 		if (playlist && typeof track.position != 'undefined'){
 			if(configFile.userDefined.padtrck){
-				 filename = filename.replace(/%position%/g, fixName(pad(track.position+1, (parseInt(configFile.userDefined.paddingSize)>0 ? parseInt(configFile.userDefined.paddingSize) : playlist.fullSize))));
+				 filename = filename.replace(/%position%/g, fixName(pad(track.position+1, (parseInt(configFile.userDefined.paddingSize)>0 ? parseInt(configFile.userDefined.paddingSize) : playlist.fullSize)), configFile.userDefined.illegalCharacterReplacer));
 			}else{
-				filename = filename.replace(/%position%/g, fixName(track.position+1));
+				filename = filename.replace(/%position%/g, fixName(track.position+1, configFile.userDefined.illegalCharacterReplacer));
 			}
 		} else {
 			filename = filename.replace(/%position%/g, '');
 		}
-		filename = filename.replace(/%disc%/g, fixName(track.discNumber));
-		filename = filename.replace(/%isrc%/g, fixName(track.ISRC ? track.ISRC : "Unknown"));
-		filename = filename.replace(/%explicit%/g, fixName((track.explicit ? (filename.indexOf(/[^%]explicit/g)>-1 ? "" : "(Explicit)") : "")));
-		filename = filename.replace(/%genre%/g, fixName(track.album.genre ? (Array.isArray(track.album.genre) ? track.album.genre[0] : track.album.genre) : "Unknown"));
+		filename = filename.replace(/%disc%/g, fixName(track.discNumber, configFile.userDefined.illegalCharacterReplacer));
+		filename = filename.replace(/%isrc%/g, fixName(track.ISRC ? track.ISRC : "Unknown", configFile.userDefined.illegalCharacterReplacer));
+		filename = filename.replace(/%explicit%/g, fixName((track.explicit ? (filename.indexOf(/[^%]explicit/g)>-1 ? "" : "(Explicit)") : ""), configFile.userDefined.illegalCharacterReplacer));
+		filename = filename.replace(/%genre%/g, fixName(track.album.genre ? (Array.isArray(track.album.genre) ? track.album.genre[0] : track.album.genre) : "Unknown", configFile.userDefined.illegalCharacterReplacer));
 		filename = filename.replace(/[/\\]/g, path.sep)
 		return filename.trim();
 	}catch(e){
@@ -2674,20 +2674,20 @@ function settingsRegex(track, filename, playlist) {
  */
 function settingsRegexAlbum(album, foldername) {
 	try{
-		foldername = foldername.replace(/%album%/g, fixName(album.title))
-		foldername = foldername.replace(/%artist%/g, fixName(album.artist.name))
-		foldername = foldername.replace(/%artist_id%/g, fixName(album.artist.id));
-		foldername = foldername.replace(/%year%/g, fixName(album.year))
-		foldername = foldername.replace(/%date%/g, fixName(album.date))
+		foldername = foldername.replace(/%album%/g, fixName(album.title, configFile.userDefined.illegalCharacterReplacer))
+		foldername = foldername.replace(/%artist%/g, fixName(album.artist.name, configFile.userDefined.illegalCharacterReplacer))
+		foldername = foldername.replace(/%artist_id%/g, fixName(album.artist.id, configFile.userDefined.illegalCharacterReplacer));
+		foldername = foldername.replace(/%year%/g, fixName(album.year, configFile.userDefined.illegalCharacterReplacer))
+		foldername = foldername.replace(/%date%/g, fixName(album.date, configFile.userDefined.illegalCharacterReplacer))
 		if (album.recordType){
-			foldername = foldername.replace(/%type%/g, fixName(album.recordType[0].toUpperCase() + album.recordType.substring(1)))
+			foldername = foldername.replace(/%type%/g, fixName(album.recordType[0].toUpperCase() + album.recordType.substring(1), configFile.userDefined.illegalCharacterReplacer))
 		}else{
 			foldername = foldername.replace(/%type%/g, "")
 		}
-		foldername = foldername.replace(/%label%/g, fixName(album.label))
-		foldername = foldername.replace(/%upc%/g, fixName(album.barcode ? album.barcode : "Unknown"));
-		foldername = foldername.replace(/%album_id%/g, fixName(album.id));
-		foldername = foldername.replace(/%explicit%/g, fixName((album.explicit ? (foldername.indexOf(/[^%]explicit/g)>-1 ? "" : "(Explicit) ") : "")))
+		foldername = foldername.replace(/%label%/g, fixName(album.label, configFile.userDefined.illegalCharacterReplacer))
+		foldername = foldername.replace(/%upc%/g, fixName(album.barcode ? album.barcode : "Unknown", configFile.userDefined.illegalCharacterReplacer));
+		foldername = foldername.replace(/%album_id%/g, fixName(album.id, configFile.userDefined.illegalCharacterReplacer));
+		foldername = foldername.replace(/%explicit%/g, fixName((album.explicit ? (foldername.indexOf(/[^%]explicit/g)>-1 ? "" : "(Explicit) ") : ""), configFile.userDefined.illegalCharacterReplacer))
 		if (album.compilation){
 			foldername = foldername.replace(/%bitrate%/g, "Variable")
 			foldername = foldername.replace(/%genre%/g, "Compilation")
@@ -2714,7 +2714,7 @@ function settingsRegexAlbum(album, foldername) {
 				default:
 					foldername = foldername.replace(/%bitrate%/g, "128")
 			}
-			foldername = foldername.replace(/%genre%/g, fixName(album.genre ? (Array.isArray(album.genre) ? album.genre[0] : album.genre) : "Unknown"))
+			foldername = foldername.replace(/%genre%/g, fixName(album.genre ? (Array.isArray(album.genre) ? album.genre[0] : album.genre) : "Unknown", configFile.userDefined.illegalCharacterReplacer))
 		}
 		foldername = foldername.replace(/[/\\]/g, path.sep)
 		return foldername.trim();
@@ -2725,19 +2725,19 @@ function settingsRegexAlbum(album, foldername) {
 }
 
 function settingsRegexArtist(artist, foldername) {
-	foldername = foldername.replace(/%name%/g, fixName(artist.name));
-	foldername = foldername.replace(/%artist_id%/g, fixName(artist.id));
+	foldername = foldername.replace(/%name%/g, fixName(artist.name, configFile.userDefined.illegalCharacterReplacer));
+	foldername = foldername.replace(/%artist_id%/g, fixName(artist.id, configFile.userDefined.illegalCharacterReplacer));
 	foldername = foldername.replace(/[/\\]/g, path.sep)
 	return foldername.trim();
 }
 
 function settingsRegexPlaylist(playlist, foldername){
-	foldername = foldername.replace(/%owner%/g, fixName(playlist.artist.name));
-	foldername = foldername.replace(/%owner_id%/g, fixName(playlist.artist.id));
-	foldername = foldername.replace(/%name%/g, fixName(playlist.title));
-	foldername = foldername.replace(/%year%/g, fixName(playlist.year));
-	foldername = foldername.replace(/%date%/g, fixName(playlist.date));
-	foldername = foldername.replace(/%playlist_id%/g, fixName(playlist.id));
+	foldername = foldername.replace(/%owner%/g, fixName(playlist.artist.name, configFile.userDefined.illegalCharacterReplacer));
+	foldername = foldername.replace(/%owner_id%/g, fixName(playlist.artist.id, configFile.userDefined.illegalCharacterReplacer));
+	foldername = foldername.replace(/%name%/g, fixName(playlist.title, configFile.userDefined.illegalCharacterReplacer));
+	foldername = foldername.replace(/%year%/g, fixName(playlist.year, configFile.userDefined.illegalCharacterReplacer));
+	foldername = foldername.replace(/%date%/g, fixName(playlist.date, configFile.userDefined.illegalCharacterReplacer));
+	foldername = foldername.replace(/%playlist_id%/g, fixName(playlist.id, configFile.userDefined.illegalCharacterReplacer));
 	foldername = foldername.replace(/[/\\]/g, path.sep)
 	return foldername.trim();
 }

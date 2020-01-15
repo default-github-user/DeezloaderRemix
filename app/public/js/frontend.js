@@ -287,6 +287,14 @@ $(document).ready(function () {
 		localStorage.setItem("previewVolume", preview_max_volume)
 	})
 
+	// Illegal character settings
+	$("#modal_settings_input_illegalCharacterReplacer").keypress( function(e) {
+		const regex = RegExp('[\0\/\\:*?"<>|]');
+		if (regex.test(e.key) && e.key != 'backspace') {
+				e.preventDefault();
+		}
+	});
+
 	// Load top charts list for countries
 	if (localStorage.getItem('chartsCountry') == null)
 		localStorage.setItem('chartsCountry', "Worldwide")
@@ -530,6 +538,7 @@ $('#modal_settings_btn_saveSettings').click(function () {
 		saveFullArtists : $('#modal_settings_cbox_saveFullArtists').is(':checked'),
 		padtrck: $('#modal_settings_cbox_padtrck').is(':checked'),
 		paddingSize: $('#modal_settings_number_paddingSize').val(),
+		illegalCharacterReplacer: $('#modal_settings_input_illegalCharacterReplacer').val(),
 		queueConcurrency: parseInt($('#modal_settings_number_queueConcurrency').val()),
 		maxBitrate: $('#modal_settings_select_maxBitrate').val(),
 		fallbackBitrate : $('#modal_settings_cbox_fallbackBitrate').is(':checked'),
@@ -652,6 +661,7 @@ function fillSettingsModal(settings, spotifySettings = {clientId: "", clientSecr
 	$('#modal_settings_cbox_saveFullArtists').prop('checked', settings.saveFullArtists)
 	$('#modal_settings_cbox_padtrck').prop('checked', settings.padtrck)
 	$('#modal_settings_number_paddingSize').val(settings.paddingSize)
+	$('#modal_settings_input_illegalCharacterReplacer').val(settings.illegalCharacterReplacer)
 	$('#modal_settings_number_queueConcurrency').val(settings.queueConcurrency)
 	$('#modal_settings_select_maxBitrate').val(settings.maxBitrate).formSelect()
 	$('#modal_settings_cbox_fallbackBitrate').prop('checked', settings.fallbackBitrate)

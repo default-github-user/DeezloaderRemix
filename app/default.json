@@ -17,6 +17,7 @@
 		"saveFullArtists": false,
 		"padtrck": true,
 		"paddingSize": "0",
+		"illegalCharacterReplacer": "_",
 		"queueConcurrency": 3,
 		"maxBitrate": "3",
 		"fallbackBitrate": true,

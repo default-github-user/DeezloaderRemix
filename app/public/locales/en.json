@@ -248,5 +248,6 @@
 	"Artist Tag Format": "Artist Tag Format",
 	"Move featured artists to trackname": "Move featured artists to trackname",
 	"Use Null Separator in MP3s": "Use Null Separator in MP3s",
-	"Preview Volume": "Preview Volume"
+	"Preview Volume": "Preview Volume",
+	"Illegal character replacer": "Illegal character replacer"
 }
