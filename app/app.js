@@ -11,8 +11,9 @@
 // Server stuff
 const express = require('express')
 const app = express()
-console.log('Heroku allowed port:' + ${PORT});
 const PORT = process.env.PORT || 80;
+console.log('Heroku allowed port:' + PORT);
+
 const server = require('http').createServer(app)
 const io = require('socket.io').listen(server, {log: false, wsEngine: 'ws'})
 var cookieParser = require('cookie-parser')
