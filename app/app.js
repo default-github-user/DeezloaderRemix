@@ -11,7 +11,7 @@
 // Server stuff
 const express = require('express')
 const app = express()
-console.log(`Server is listening on port ${PORT}...`));
+console.log('Heroku allowed port:' + ${PORT});
 const PORT = process.env.PORT || 80;
 const server = require('http').createServer(app)
 const io = require('socket.io').listen(server, {log: false, wsEngine: 'ws'})
