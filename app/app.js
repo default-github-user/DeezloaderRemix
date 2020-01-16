@@ -11,7 +11,8 @@
 // Server stuff
 const express = require('express')
 const app = express()
-app.set('port', process.env.PORT || 80);
+console.log(`Server is listening on port ${PORT}...`));
+const PORT = process.env.PORT || 80;
 const server = require('http').createServer(app)
 const io = require('socket.io').listen(server, {log: false, wsEngine: 'ws'})
 var cookieParser = require('cookie-parser')
@@ -104,8 +105,8 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(i18n.express);
-server.listen(configFile.serverPort)
-logger.info('Server is running @ localhost:' + configFile.serverPort)
+server.listen(PORT);
+logger.info('Server is running @ localhost:' + configFile.serverPort);
 
 app.get('/', function(req, res) {
 	res.render('index.ejs');
