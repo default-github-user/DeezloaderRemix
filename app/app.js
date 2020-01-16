@@ -11,6 +11,7 @@
 // Server stuff
 const express = require('express')
 const app = express()
+app.set('port', process.env.PORT || 80);
 const server = require('http').createServer(app)
 const io = require('socket.io').listen(server, {log: false, wsEngine: 'ws'})
 var cookieParser = require('cookie-parser')
