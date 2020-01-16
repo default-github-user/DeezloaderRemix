@@ -106,8 +106,9 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(i18n.express);
+// Start the server with heroku port
 server.listen(PORT);
-logger.info('Server is running @ localhost:' + configFile.serverPort);
+logger.info('Server is running @ localhost:' + PORT);
 
 app.get('/', function(req, res) {
 	res.render('index.ejs');
