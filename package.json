@@ -1,23 +1,29 @@
 {
-	"license": "GPL-3.0",
+	"name": "deezloader-rmx",
+	"productName": "Deezloader Remix",
+	"version": "4.3.0",
 	"description": "Download music from Deezer",
-	"homepage": "https://notabug.org/RemixDevs/DeezloaderRemix",
-	"bugs": "https://notabug.org/RemixDevs/DeezloaderRemix/issues",
-	"repository": {
-		"type": "git",
-		"url": "https://notabug.org/RemixDevs/DeezloaderRemix.git"
-	},
-	"devDependencies": {
-		"cross-env": "latest",
-		"electron": "^3.1.9",
-		"electron-builder": "^20.40.2"
-	},
-	"scripts": {
-		"dist:win32": "node ./builders/win32.js",
-		"dist:win64": "node ./builders/win64.js",
-		"dist:linux": "node ./builders/linux.js",
-		"dist:macOS": "node ./builders/macOS.js",
-		"start": "cross-env NODE_ENV=development electron ./app",
-		"postinstall": "electron-builder install-app-deps"
+	"main": "main.js",
+	"author": "RemixDevs",
+	"license": "GPL-3.0",
+	"dependencies": {
+		"async": "latest",
+		"cookie-parser": "latest",
+		"dateformat": "latest",
+		"deezer-api": "git+https://notabug.org/RemixDevs/deezer-api.git#master",
+		"ejs": "latest",
+		"electron-context-menu": "^0.15.0",
+		"electron-window-state-manager": "latest",
+		"express": "latest",
+		"fs-extra": "latest",
+		"i18n": "latest",
+		"metaflac-js2": "git+https://github.com/d-fi/metaflac-js2.git",
+		"queue": "^6.0.1",
+		"request": "^2.87.0",
+		"request-promise": "^4.2.4",
+		"sequential-task-queue": "^1.2.1",
+		"socket.io": "latest",
+		"socket.io-client": "latest",
+		"spotify-web-api-node": "latest"
 	}
 }
